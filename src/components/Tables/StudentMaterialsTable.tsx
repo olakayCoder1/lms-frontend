@@ -220,7 +220,7 @@ const StudentMaterialsTable = () => {
         <div className="fixed top-0 inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-9999">
           <div
             ref={modalRef}
-            className="bg-white rounded-lg shadow-lg w-3/4 max-w-3xl p-4 relative"
+            className="bg-white rounded-lg shadow-lg w-full sm:w-3/4 max-w-3xl p-4 relative"
           >
             {/* Close button */}
             <button
@@ -230,7 +230,7 @@ const StudentMaterialsTable = () => {
               &times;
             </button>
             {/* Document viewer */}
-            <DocViewer documents={[{ uri: selectedDoc }]} pluginRenderers={DocViewerRenderers} />
+            <DocViewer className='w-full' documents={[{ uri: selectedDoc }]} pluginRenderers={DocViewerRenderers} />
           </div>
         </div>
       )}
