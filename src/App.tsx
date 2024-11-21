@@ -19,6 +19,7 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import TutorialPage from './pages/TutorialPage';
+import JoinLiveStreamPage from './pages/JoinLiveStreamPage';
 
 
 function App() {
@@ -71,6 +72,15 @@ function App() {
             <>
               <PageTitle title="My courses | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <StudentCoureses />
+            </>
+          }
+        />
+        <Route
+          path="/R8CZ7WlWeG0M"
+          element={
+            <>
+              <PageTitle title="Live Stream | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <JoinLiveStreamPage />
             </>
           }
         />
