@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StudentCartOne from '../../components/Charts/StudentChartOne';
 import StudentMaterialsTable from '../../components/Tables/StudentMaterialsTable';
 
-const ECommerce: React.FC = () => {
+const Student: React.FC = () => {
   return (
     <>
       <Breadcrumb pageName="Dashboard" />
@@ -67,4 +67,4 @@ const ECommerce: React.FC = () => {
   );
 };
 
-export default ECommerce;
+export default Student;
