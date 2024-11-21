@@ -11,7 +11,7 @@ const ECommerce: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
 
 
-        <CardDataStats title="Regsiter Courses" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Registered Courses" total="2.450" rate="2.59%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
