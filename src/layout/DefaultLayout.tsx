@@ -58,7 +58,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* Only render the page wrapper if not on the auth pages */}
-      {!isAuthPage && (
+      {!isAuthPage && location.pathname != '/'  ? (
         <div className="flex h-screen overflow-hidden">
           {/* Sidebar only if not on auth pages */}
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -75,9 +75,11 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
             </main>
           </div>
         </div>
+      ): (
+        <main>{children}</main>
       )}
       {/* If on auth pages, just render the children (no sidebar, no header) */}
-      {isAuthPage && <main>{children}</main>}
+      {/* {isAuthPage && } */}
     </div>
   );
 };
