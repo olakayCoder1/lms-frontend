@@ -18,18 +18,36 @@ const SignIn: React.FC = () => {
 
   // create a function to handle the form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("Clicked")
-    console.log("Clicked")
-    console.log("Clicked")
-    console.log("Clicked")
+
     e.preventDefault();
+    let user = {
+      email: formData.email,
+      role: 'user', // Default role is 'user'
+      firstName:"Olanrewaju",
+      lastName:"AbdulKabeer",
+    };
+  
+    // Simulate checking the email and setting the role
+    if (formData.email === 'olakay@gmail.com') {
+      user = {
+        ...user,
+        role: 'tutor',  // Set role as tutor for olakay@gmail.com
+      };
+    }
 
-    // perform two seconds detail the redirect to dashbaord
+    // Log user object (for testing)
+    console.log('User:', user);
+
+    // Store the user data in localStorage
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Simulating the API call with a 2-second delay
     setTimeout(() => {
-      window.location.href = "/dashboard"
-      }, 2000);
-
-    
+      console.log('Redirecting to Dashboard...');
+      // Redirect after 2 seconds
+      window.location.href = "/dashboard";
+    }, 2000);
+      
     // setLoading(true)
     // try {
     //   // call the API to authenticate the user
@@ -223,6 +241,7 @@ const SignIn: React.FC = () => {
                         (e) => { setFormData({ ...formData, email: e.target.value }); }
                       }
                       placeholder="Enter your email"
+                      required={true}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
@@ -248,12 +267,13 @@ const SignIn: React.FC = () => {
 
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Re-type Password
+                    Password
                   </label>
                   <div className="relative">
                     <input
                       type="password"
                       value={formData?.password}
+                      required={true}
                       onChange={
                         (e) => { setFormData({ ...formData, password: e.target.value }); }
                       }

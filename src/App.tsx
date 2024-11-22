@@ -28,6 +28,11 @@ import NewMaterialForm from './pages/Form/NewMaterialForm';
 import TableThree from './components/Tables/TableThree';
 import StudentMaterialsTable from './components/Tables/StudentMaterialsTable';
 import StudentsListTable from './components/Tables/StudentsListTable';
+import StudentMaterialTable from './components/Tables/StudentMaterialTable';
+import TutorStudentList from './pages/TutorStudentList';
+import TutorMaterialList from './pages/TutorMaterialList';
+import TutorContentList from './pages/TutorContentList';
+import MainDashboard from './pages/Dashboard/MainDashboard';
 
 
 function App() {
@@ -70,7 +75,7 @@ function App() {
           element={
             <>
               <PageTitle title="Dashbaord " />
-              <Student />
+              <MainDashboard />
             </>
           }
         />
@@ -124,7 +129,7 @@ function App() {
           element={
             <>
               <PageTitle title="Students " />
-              <StudentsListTable />
+              <TutorStudentList />
             </>
           }
         />
@@ -142,7 +147,7 @@ function App() {
           element={
             <>
               <PageTitle title="Form Elements " />
-              <TutorCoursesTable />
+              <TutorContentList />
             </>
           }
         />
@@ -169,7 +174,7 @@ function App() {
           element={
             <>
               <PageTitle title="Form Elements " />
-              <TutorMaterialsTable />
+              <TutorMaterialList />
             </>
           }
         />
