@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Package } from '../../types/package';
 
 const packageData: Package[] = [
@@ -27,7 +28,8 @@ const packageData: Package[] = [
   },
 ];
 
-const StudentMaterialsTable = () => {
+const StudentsListTable = () => {
+  const navigate = useNavigate();
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -77,7 +79,8 @@ const StudentMaterialsTable = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-primary">
+                    <button
+                      onClick={()=> navigate('/students/R8CZ7WlWeG0M')} className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"
@@ -96,7 +99,7 @@ const StudentMaterialsTable = () => {
                         />
                       </svg>
                     </button>
-                    <button className="hover:text-primary">
+                    {/* <button className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"
@@ -141,7 +144,7 @@ const StudentMaterialsTable = () => {
                           fill=""
                         />
                       </svg>
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>
@@ -153,4 +156,4 @@ const StudentMaterialsTable = () => {
   );
 };
 
-export default StudentMaterialsTable;
+export default StudentsListTable;

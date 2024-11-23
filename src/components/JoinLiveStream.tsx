@@ -184,7 +184,7 @@ const LivestreamView = ({ call }) => {
   }, [firstParticipant]);
 
   if (!firstParticipant) {
-    return <div>The host hasn't joined yet.</div>; // Display message if firstParticipant is not available
+    return <div>The host hasn't joined yet.</div>; 
   }
 
   const handleGoLive = () => {
@@ -217,8 +217,6 @@ const LivestreamView = ({ call }) => {
       )}
 
       <div style={{ display: "flex", gap: "4px" }}>
-        {/* Optional controls for camera and microphone */}
-        {/* If the call is live, you can show options to stop live */}
         {isLive ? (
           <button onClick={handleStopLive}>Stop Live</button>
         ) : (

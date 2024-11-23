@@ -2,7 +2,7 @@ import React from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StudentCartOne from '../../components/Charts/StudentChartOne';
-import StudentMaterialsTable from '../../components/Tables/StudentMaterialsTable';
+import StudentMaterialTable from '../../components/Tables/StudentMaterialTable';
 
 const Student: React.FC = () => {
   return (
@@ -59,7 +59,7 @@ const Student: React.FC = () => {
         {/* <ChartThree /> */}
         {/* <MapOne /> */}
         <div className="col-span-12">
-          <StudentMaterialsTable />
+          <StudentMaterialTable /> 
         </div>
         {/* <ChatCard /> */}
       </div>

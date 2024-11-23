@@ -8,7 +8,6 @@ import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
-import Student from './pages/Dashboard/Student';
 import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
 import Profile from './pages/Profile';
@@ -21,18 +20,13 @@ import Buttons from './pages/UiElements/Buttons';
 import TutorialPage from './pages/TutorialPage';
 import JoinLiveStreamPage from './pages/JoinLiveStreamPage';
 import NewContentForm from './pages/Form/NewContentForm';
-import TutorCoursesTable from './components/Tables/TutorCoursesTable';
 import UpdateContentForm from './pages/Form/UpdateContentForm';
-import TutorMaterialsTable from './components/Tables/TutorMaterialsTable';
 import NewMaterialForm from './pages/Form/NewMaterialForm';
-import TableThree from './components/Tables/TableThree';
-import StudentMaterialsTable from './components/Tables/StudentMaterialsTable';
-import StudentsListTable from './components/Tables/StudentsListTable';
-import StudentMaterialTable from './components/Tables/StudentMaterialTable';
 import TutorStudentList from './pages/TutorStudentList';
 import TutorMaterialList from './pages/TutorMaterialList';
 import TutorContentList from './pages/TutorContentList';
 import MainDashboard from './pages/Dashboard/MainDashboard';
+import StudentDetails from './pages/StudentDetails';
 
 
 function App() {
@@ -130,6 +124,15 @@ function App() {
             <>
               <PageTitle title="Students " />
               <TutorStudentList />
+            </>
+          }
+        />
+        <Route
+          path="/students/:id"
+          element={
+            <>
+              <PageTitle title="Student Details" />
+              <StudentDetails />
             </>
           }
         />
