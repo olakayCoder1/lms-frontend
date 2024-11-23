@@ -89,7 +89,7 @@ function App() {
           }
         />
         <Route
-          path="/R8CZ7WlWeG0M"
+          path="/livestream/:id"
           element={
             <>
               <PageTitle title="Live Stream " />
