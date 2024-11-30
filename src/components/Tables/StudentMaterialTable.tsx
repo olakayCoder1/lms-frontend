@@ -330,10 +330,10 @@ const StudentMaterialTable = () => {
             });
             console.log(data)
             setMaterials(data);
-            // setIsLoading(false)
+            setIsLoading(false)
         } catch (error) {
             console.error('Error fetching user profile:', error);
-            // setIsLoading(false)
+            setIsLoading(false)
         }
 
     }
