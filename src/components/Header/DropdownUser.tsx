@@ -5,14 +5,7 @@ import { AuthContext } from '../../contexts/ContextProvider';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { authUser } = useContext(AuthContext)
-
-  // Function to remove user from localStorage
-  const deleteUserFromLocalStorage = () => {
-    localStorage.removeItem('user');    
-    localStorage.removeItem('tokens');    
-    window.location.href = '/auth/signin';
-  };
+  const { authUser,deleteUserFromLocalStorage } = useContext(AuthContext)
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -23,9 +16,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Olanrewaju AbdulKabeer
+            {authUser?.first_name} {authUser?.last_name}
           </span>
-          <span className="block text-xs">20/52HA000 ({authUser?.role})</span>
+          <span className="block text-xs">{authUser?.email} ({authUser?.role})</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">

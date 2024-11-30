@@ -7,20 +7,27 @@ import { AuthContext } from '../contexts/ContextProvider';
 export default function TutorMaterialList() {
 
     const {fetchWithAuth,formatDate} = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(false)
+    
+
 
     const [materialsOverview, setMaterialsOverview] = useState({})
+    
 
     useEffect(() => {
         async function fetchMaterials() {
             try {
+                setIsLoading(true)
                 const data = await fetchWithAuth({
                 method: 'GET',
                 path: `/contents/materials/overview`,
                 });
                 console.log(data)
                 setMaterialsOverview(data?.data);
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching user profile:', error);
+                setIsLoading(false)
             }
     
         }
@@ -35,7 +42,7 @@ export default function TutorMaterialList() {
         <Breadcrumb pageName="Materials" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5 mb-12">
 
-                <CardDataStats title="Total Materials" total={materialsOverview?.total} >
+                <CardDataStats title="Total Materials" total={materialsOverview?.total} isLoading={isLoading}>
                 <svg
                     className="fill-primary dark:fill-white"
                     width="22"

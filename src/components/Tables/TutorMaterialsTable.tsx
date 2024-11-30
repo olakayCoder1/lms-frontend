@@ -2,12 +2,14 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Package } from '../../types/package';
 import { AuthContext } from '../../contexts/ContextProvider';
+import InAppLoader from '../InAppLoader';
 
 const TutorMaterialsTable = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
   const {fetchWithAuth,formatDate} = useContext(AuthContext)
 
   const [materials, setMaterials] = useState([])
@@ -30,14 +32,17 @@ const TutorMaterialsTable = () => {
   useEffect(() => {
     async function fetchMaterials() {
         try {
+            setIsLoading(true)
             const data = await fetchWithAuth({
             method: 'GET',
             path: `/contents/materials/`,
             });
             // console.log(data)
             setMaterials(data);
+            setIsLoading(false)
         } catch (error) {
             console.error('Error fetching user profile:', error);
+            setIsLoading(false)
         }
 
     }
@@ -62,7 +67,11 @@ const TutorMaterialsTable = () => {
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
-        <table className="w-full table-auto">
+        {
+          isLoading ? (
+            <InAppLoader isLoadingText="Fetching materials" />
+          ):(
+            <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
@@ -182,6 +191,9 @@ const TutorMaterialsTable = () => {
             ))}
           </tbody>
         </table>
+          )
+        }
+        
 
         {isModalOpen && selectedDoc && (
         <div className="fixed top-0 inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-9999">

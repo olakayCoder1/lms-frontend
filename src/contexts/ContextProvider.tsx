@@ -107,6 +107,11 @@ export default function AuthContextProvider({children}){
     }, [authToken, authUser]);  // Depend on authToken and authUser
 
 
+    const deleteUserFromLocalStorage = () => {
+      localStorage.removeItem('user');    
+      localStorage.removeItem('tokens');    
+      window.location.href = '/auth/signin';
+    };
 
     async function fetchWithAuth({ method = 'GET', path, queryParams = {}, body = null , isformData = false}) {
         const accessToken = authToken?.access
@@ -128,7 +133,6 @@ export default function AuthContextProvider({children}){
         if (accessToken) {
           headers['Authorization'] = `Bearer ${accessToken}`;
         }
-        console.log(headers)
         // Make the initial API request
         let response;
         if(isformData){
@@ -147,7 +151,7 @@ export default function AuthContextProvider({children}){
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ refresh_token: refreshToken }),
+              body: JSON.stringify({ refresh: refreshToken }),
             });
       
             if (!refreshResponse.ok) {
@@ -156,18 +160,31 @@ export default function AuthContextProvider({children}){
       
             // Parse the new tokens from the response
             const refreshData = await refreshResponse.json();
-            const { access_token, refresh_token } = refreshData;
-      
             // Store the new tokens in localStorage
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-      
+            localStorage.setItem('tokens', JSON.stringify(refreshData));
+            setAuthToken(refreshData)
             // Retry the original request with the new access token
-            headers['Authorization'] = `Bearer ${access_token}`;
+            headers['Authorization'] = `Bearer ${refreshData?.access}`;
             response = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : null });
+ 
+            if (!response.ok) {
+              if(response.status === 400){
+                const errorData = await response.json();
+                displayNotification('error',errorData?.message)
+                throw new Error(errorData?.message)
+              }
+              if(response.status === 401){
+                deleteUserFromLocalStorage()
+              }
+              throw new Error(`Error fetching data from ${path}: ${response.statusText}`);
+            }
+
+            return response.json();
           } catch (error) {
             console.error('Token refresh failed:', error);
+            deleteUserFromLocalStorage()
             throw new Error('Authentication error. Please log in again.');
+            
           }
         }
       
@@ -202,7 +219,7 @@ export default function AuthContextProvider({children}){
         return formattedDate
       }
 
-    const value = {  displayNotification, authUser , setAuthUser, BACKEND_URL,authToken,setAuthToken,fetchWithAuth,formatDate}
+    const value = {  displayNotification, authUser , setAuthUser, BACKEND_URL,authToken,setAuthToken,fetchWithAuth,formatDate,deleteUserFromLocalStorage}
      
     return (
         <AuthContext.Provider value={value} >

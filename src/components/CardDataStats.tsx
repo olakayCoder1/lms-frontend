@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import InAppLoader from './InAppLoader';
 
 interface CardDataStatsProps {
   title: string;
@@ -6,6 +7,7 @@ interface CardDataStatsProps {
   rate: string;
   levelUp?: boolean;
   levelDown?: boolean;
+  isLoading?: boolean;
   children: ReactNode;
 }
 
@@ -16,10 +18,16 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   levelUp,
   levelDown,
   children,
+  isLoading,
 }) => {
   return (
     <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
+      {
+        isLoading ? (
+          <InAppLoader isLoadingText={undefined} />
+        ):(
+          <>
+            <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
         {children}
       </div>
 
@@ -70,6 +78,10 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
           )}
         </span>
       </div>
+          </>
+        )
+      }
+      
     </div>
   );
 };

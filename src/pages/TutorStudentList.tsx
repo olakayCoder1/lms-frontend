@@ -7,6 +7,7 @@ import { AuthContext } from '../contexts/ContextProvider';
 export default function TutorStudentList() {
     
     const {fetchWithAuth} = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(false)
     const [studentsOverview, setStudentsOverview] = useState(
         {
             "total_students": '',
@@ -21,13 +22,16 @@ export default function TutorStudentList() {
     useEffect(() => {
         async function fetchUserOverview() {
             try {
+                setIsLoading(true)
                 const data = await fetchWithAuth({
                 method: 'GET',
                 path: '/students/overview',
                 });
                 setStudentsOverview(data?.data);
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching user profile:', error);
+                setIsLoading(false)
             }
     
         }
@@ -39,7 +43,7 @@ export default function TutorStudentList() {
             
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5 mb-12">
 
-                <CardDataStats title="Registered Students" total={studentsOverview?.total_students} rate="2.59%" levelUp>
+                <CardDataStats title="Registered Students" total={studentsOverview?.total_students} rate="2.59%" levelUp isLoading={isLoading}>
                 <svg
                     className="fill-primary dark:fill-white"
                     width="22"
@@ -59,7 +63,7 @@ export default function TutorStudentList() {
                 </svg>
                 </CardDataStats>
 
-                <CardDataStats title="Active Students" total={studentsOverview?.active_students} rate="2.59%" levelUp>
+                <CardDataStats title="Active Students" total={studentsOverview?.active_students} rate="2.59%" levelUp isLoading={isLoading}>
                 <svg
                     className="fill-primary dark:fill-white"
                     width="22"
@@ -78,7 +82,7 @@ export default function TutorStudentList() {
                     />
                 </svg>
                 </CardDataStats>
-                <CardDataStats title="Inactive Students" total={studentsOverview?.inactive_students} rate="2.59%" levelUp>
+                <CardDataStats title="Inactive Students" total={studentsOverview?.inactive_students} rate="2.59%" levelUp isLoading={isLoading}>
                 <svg
                     className="fill-primary dark:fill-white"
                     width="22"

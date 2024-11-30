@@ -9,6 +9,7 @@ export default function TutorContentList() {
 
 
     const {fetchWithAuth,formatDate} = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(false)
 
     const [contentsOverview, setContentsOverview] = useState({})
     
@@ -16,14 +17,17 @@ export default function TutorContentList() {
     useEffect(() => {
         async function fetchContents() {
             try {
+                setIsLoading(true)
                 const data = await fetchWithAuth({
                 method: 'GET',
                 path: `/contents/video/overview/`,
                 });
                 console.log(data)
                 setContentsOverview(data?.data);
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching user profile:', error);
+                setIsLoading(false)
             }
     
         }
@@ -36,7 +40,7 @@ export default function TutorContentList() {
         <Breadcrumb pageName="Contents" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5 mb-12">
 
-            <CardDataStats title="Total Contents" total={contentsOverview?.total} >
+            <CardDataStats title="Total Contents" total={contentsOverview?.total} isLoading={isLoading}>
             <svg
                 className="fill-primary dark:fill-white"
                 width="22"

@@ -1,17 +1,45 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StudentCartOne from '../../components/Charts/StudentChartOne';
 import StudentMaterialsTable from '../../components/Tables/StudentMaterialsTable';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const Tutor: React.FC = () => {
+
+
+  const [isLoading, setIsLoading] = useState(false)
+  const {fetchWithAuth,formatDate} = useContext(AuthContext)
+  const [overviewData, setOverviewData] = useState({})
+
+
+  useEffect(() => {
+    async function fetchOverview() {
+        try {
+            setIsLoading(true)
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/admin/dashboard/overview`,
+            });
+            console.log(data?.data)
+            setOverviewData(data?.data);
+            setIsLoading(false)
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            setIsLoading(false)
+        }
+
+    }
+    fetchOverview();
+  }, [])
+
   return (
     <>
       <Breadcrumb pageName="Dashboard" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5">
 
 
-        <CardDataStats title="Registered Student" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Registered Student" total={overviewData?.total_students}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -32,7 +60,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Active Student" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Active Student" total={overviewData?.active_students}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -53,7 +81,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Total Content" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Total Content" total={overviewData?.video_count}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -74,7 +102,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Total Content" total="2.450" rate="2.59%" levelDown>
+        <CardDataStats title="Total Materials" total={overviewData?.material_count}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"

@@ -47,11 +47,6 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Get the current location (route)
   const location = useLocation();
 
-  console.log(location.pathname)
-  console.log(location.pathname)
-  console.log(location.pathname)
-  console.log(location.pathname)
-
   // Check if the current path is in the excluded list
   const isAuthPage = ['/login', '/register','/auth/signup','/auth/signin'].includes(location.pathname);
 

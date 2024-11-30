@@ -6,7 +6,7 @@ import userThree from '../images/user/user-03.png';
 const Settings = () => {
 
 
-  const { fetchWithAuth,displayNotification } = useContext(AuthContext)
+  const { fetchWithAuth,displayNotification ,setAuthUser} = useContext(AuthContext)
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isPasswordProcessing, setIsPasswordProcessing] = useState<boolean>(false);
   const [isProfileProcessing, setIsProfileProcessing] = useState<boolean>(false);
@@ -29,6 +29,8 @@ const Settings = () => {
           });
           console.log(data)
           setUserDetails(data?.data);
+          localStorage.setItem('user', JSON.stringify(data?.data));
+          setAuthUser(data?.data)
           setIsProfileProcessing(false)
     } catch (error) {
           console.error('Error fetching user profile:', error);
