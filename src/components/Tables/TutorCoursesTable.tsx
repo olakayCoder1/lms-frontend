@@ -52,7 +52,7 @@ const TutorCoursesTable = () => {
             path: `/contents/videos/`,
             });
             // console.log(data)
-            setVideos(data);
+            setVideos(data?.data);
             setIsLoading(false)
         } catch (error) {
             console.error('Error fetching user profile:', error);
