@@ -1,39 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Package } from '../../types/package';
-
-const packageData: Package[] = [
-  {
-    name: 'This is a simple PDF file. Fun fun fun',
-    price: 0.0,
-    invoiceDate: `Jan 13,2023`,
-    status: 'Paid',
-  },
-  {
-    name: 'Lionel Messi',
-    price: 59.0,
-    invoiceDate: `Jan 13,2023`,
-    status: 'Paid',
-  },
-  {
-    name: 'C Ronaldo',
-    price: 99.0,
-    invoiceDate: `Jan 13,2023`,
-    status: 'Unpaid',
-  },
-  {
-    name: 'Olakay Taiwo',
-    price: 59.0,
-    invoiceDate: `Jan 13,2023`,
-    status: 'Pending',
-  },
-];
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const TutorMaterialsTable = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const {fetchWithAuth,formatDate} = useContext(AuthContext)
+
+  const [materials, setMaterials] = useState([])
 
   const docs = [
     { uri: 'https://pdfobject.com/pdf/sample.pdf' }, // Remote file
@@ -45,7 +22,27 @@ const TutorMaterialsTable = () => {
     setIsModalOpen(true);
   };
 
+
+
   const closeModal = () => setIsModalOpen(false);
+
+
+  useEffect(() => {
+    async function fetchMaterials() {
+        try {
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/contents/materials/`,
+            });
+            // console.log(data)
+            setMaterials(data);
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+
+    }
+    fetchMaterials();
+  }, [])
 
   // Close modal if clicked outside
   useEffect(() => {
@@ -83,31 +80,34 @@ const TutorMaterialsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {packageData.map((packageItem, key) => (
+            {materials?.map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.name}
+                    {packageItem.title}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.invoiceDate}
+                    {formatDate(packageItem.created_at)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      packageItem.status === 'Paid'
+                      packageItem.status === 'publish'
                         ? 'bg-success text-success'
-                        : packageItem.status === 'Unpaid'
-                        ? 'bg-danger text-danger'
                         : 'bg-warning text-warning'
                     }`}
                   >
                     {packageItem.status}
                   </p>
+                  {/* <p
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-mediumbg-success text-success`}
+                  >
+                    Active
+                  </p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
@@ -157,7 +157,7 @@ const TutorMaterialsTable = () => {
                         />
                       </svg>
                     </button>
-                    <button className="hover:text-primary">
+                    {/* <button className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"
@@ -175,7 +175,7 @@ const TutorMaterialsTable = () => {
                           fill=""
                         />
                       </svg>
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>

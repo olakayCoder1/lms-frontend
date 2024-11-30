@@ -446,7 +446,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         fill=""
                       />
                     </svg>
-                    My Courses
+                    Courses
                   </NavLink>
                 </li>
                 {/* <!-- Menu Item Student Courses --> */}

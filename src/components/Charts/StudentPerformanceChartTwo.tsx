@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const options: ApexOptions = {
   colors: ['#3C50E0', '#80CAEE'],
@@ -69,19 +70,56 @@ interface ChartTwoState {
   }[];
 }
 
-const StudentPerformanceChartTwo: React.FC = () => {
+const StudentPerformanceChartTwo: React.FC = ({user_id}) => {
+
+  const {fetchWithAuth} = useContext(AuthContext)
+
   const [state, setState] = useState<ChartTwoState>({
     series: [
       {
-        name: 'Sales',
-        data: [44, 55, 41, 67, 22, 43, 65],
+        name: 'Courses',
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
       {
-        name: 'Revenue',
-        data: [13, 23, 20, 8, 13, 27, 15],
+        name: 'Engaged',
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
   });
+
+  useEffect(() => {
+    async function fetchCourse() {
+      try {
+        const data = await fetchWithAuth({
+          method: 'GET',
+          path: `/students/${user_id}/progress/analytics`,
+        });
+        console.log(data?.data);  // Log the response to check the structure
+
+        // Assuming data?.data contains the structure as described:
+        const { weekly_video_count, weekly_progress } = data?.data;
+
+        // Update the state with the fetched data
+        setState(prevState => ({
+          ...prevState,
+          series: [
+            {
+              name: 'Courses',
+              data: weekly_video_count,  // Set the 'Courses' data to weekly_video_count
+            },
+            {
+              name: 'Engaged',
+              data: weekly_progress,  // Set the 'Engaged' data to monthly_video_count
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
+
+    fetchCourse();
+  }, [user_id]);
   
   const handleReset = () => {
     setState((prevState) => ({
@@ -91,11 +129,11 @@ const StudentPerformanceChartTwo: React.FC = () => {
   handleReset;  
 
   return (
-    <div className="col-span-12 sm:col-span-6 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark ">
+    <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark ">
       <div className="mb-4 justify-between gap-4 sm:flex">
         <div>
           <h4 className="text-xl font-semibold text-black dark:text-white">
-            Profit this week
+            Course engagement this week
           </h4>
         </div>
         <div>

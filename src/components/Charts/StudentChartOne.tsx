@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const options: ApexOptions = {
   legend: {
@@ -84,10 +85,6 @@ const options: ApexOptions = {
   xaxis: {
     type: 'category',
     categories: [
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
       'Jan',
       'Feb',
       'Mar',
@@ -96,6 +93,10 @@ const options: ApexOptions = {
       'Jun',
       'Jul',
       'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ],
     axisBorder: {
       show: false,
@@ -122,20 +123,57 @@ interface ChartOneState {
   }[];
 }
 
-const StudentCartOne: React.FC = () => {
+const StudentCartOne: React.FC = ({user_id}) => {
+
+  const {fetchWithAuth} = useContext(AuthContext)
   const [state, setState] = useState<ChartOneState>({
     series: [
       {
         name: 'Course Videos',
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
+        data: [0,0,0,0,0,0,0,0,0,0,0,0],
       },
 
       {
-        name: 'Materials',
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
+        name: 'Materials', 
+        data: [0,0,0,0,0,0,0,0,0,0,0,0],
       },
     ],
   });
+
+
+  useEffect(() => {
+    async function fetchCourse() {
+      try {
+        const data = await fetchWithAuth({
+          method: 'GET',
+          path: `/students/${user_id}/materials/progress/analytics`,
+        });
+        console.log(data?.data);  // Log the response to check the structure
+
+        // Assuming data?.data contains the structure as described:
+        const { monthly_material_summary, monthly_download_summary } = data?.data;
+
+        // Update the state with the fetched data
+        setState(prevState => ({
+          ...prevState,
+          series: [
+            {
+              name: 'Course Videos',
+              data: monthly_download_summary,  // Set the 'Courses' data to weekly_video_count
+            },
+            {
+              name: 'Materials', 
+              data: monthly_material_summary,  // Set the 'Engaged' data to monthly_video_count
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
+
+    fetchCourse();
+  }, [user_id]);
 
   const handleReset = () => {
     setState((prevState) => ({
@@ -154,7 +192,7 @@ const StudentCartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-primary">Course Videos</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              {/* <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p> */}
             </div>
           </div>
           <div className="flex min-w-47.5">
@@ -163,7 +201,7 @@ const StudentCartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-secondary">Materials</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              {/* <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p> */}
             </div>
           </div>
         </div>

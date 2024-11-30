@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import DefaultLayout from './layout/DefaultLayout';
@@ -44,6 +45,8 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
+    <>
+    <ToastContainer />
     <DefaultLayout>
       <Routes>
         <Route
@@ -77,7 +80,7 @@ function App() {
           path="/mycourses"
           element={
             <>
-              <PageTitle title="My courses " />
+              <PageTitle title="Courses " />
               <StudentCoureses />
             </>
           }
@@ -92,10 +95,10 @@ function App() {
           }
         />
         <Route
-          path="/mycourses/introduction-to-react"
+          path="/mycourses/:id"
           element={
             <>
-              <PageTitle title="My courses " />
+              <PageTitle title="Courses " />
               <TutorialPage />
             </>
           }
@@ -104,7 +107,7 @@ function App() {
           path="/tutorials"
           element={
             <>
-              <PageTitle title="My courses " />
+              <PageTitle title="Courses " />
               <TutorialPage />
             </>
           }
@@ -282,6 +285,8 @@ function App() {
         />
       </Routes>
     </DefaultLayout>
+    </>
+    
   );
 }
 

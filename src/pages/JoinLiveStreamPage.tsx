@@ -7,7 +7,7 @@ export default function JoinLiveStreamPage() {
 
     return (
         <>
-        <LivestreamViewSession />
+        {/* <LivestreamViewSession /> */}
             
         </>
     )

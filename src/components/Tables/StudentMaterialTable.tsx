@@ -247,9 +247,10 @@
 
 
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Package } from '../../types/package';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const packageData: Package[] = [
   {
@@ -285,6 +286,10 @@ const StudentMaterialTable = () => {
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
+  const [materials, setMaterials] = useState([])
+
+  const {fetchWithAuth,formatDate} = useContext(AuthContext)
+
   const docs = [
     { uri: 'https://pdfobject.com/pdf/sample.pdf' }, // Remote file
     // Add other document URLs here as needed
@@ -312,6 +317,25 @@ const StudentMaterialTable = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
+
+  useEffect(() => {
+    async function fetchMaterials() {
+        try {
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/contents/materials/`,
+            });
+            console.log(data)
+            setMaterials(data);
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+
+    }
+    fetchMaterials();
+  }, [])
+
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -330,17 +354,17 @@ const StudentMaterialTable = () => {
             </tr>
           </thead>
           <tbody>
-            {packageData.map((packageItem, key) => (
+            {materials.map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.name}
+                    {packageItem.title}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.invoiceDate}
+                    {formatDate(packageItem.created_at)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

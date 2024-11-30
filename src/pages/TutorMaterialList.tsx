@@ -1,8 +1,33 @@
+import { useContext, useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import CardDataStats from '../components/CardDataStats';
 import TutorMaterialsTable from '../components/Tables/TutorMaterialsTable'
+import { AuthContext } from '../contexts/ContextProvider';
 
 export default function TutorMaterialList() {
+
+    const {fetchWithAuth,formatDate} = useContext(AuthContext)
+
+    const [materialsOverview, setMaterialsOverview] = useState({})
+
+    useEffect(() => {
+        async function fetchMaterials() {
+            try {
+                const data = await fetchWithAuth({
+                method: 'GET',
+                path: `/contents/materials/overview`,
+                });
+                console.log(data)
+                setMaterialsOverview(data?.data);
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+    
+        }
+        fetchMaterials();
+      }, [])
+
+
     
 
     return (
@@ -10,7 +35,7 @@ export default function TutorMaterialList() {
         <Breadcrumb pageName="Materials" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5 mb-12">
 
-                <CardDataStats title="Total Materials" total="2.450" rate="2.59%" levelUp>
+                <CardDataStats title="Total Materials" total={materialsOverview?.total} >
                 <svg
                     className="fill-primary dark:fill-white"
                     width="22"

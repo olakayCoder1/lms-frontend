@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Package } from '../../types/package';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const packageData: Package[] = [
   {
@@ -29,6 +31,45 @@ const packageData: Package[] = [
 ];
 
 const StudentsListTable = () => {
+
+  const {fetchWithAuth} = useContext(AuthContext)
+  const [students, setStudents] = useState([])
+
+  // ON COMPNENT LOAD GET THE STUDENT OVERVIEW
+  useEffect(() => {
+      async function fetchStudents() {
+          try {
+              const data = await fetchWithAuth({
+              method: 'GET',
+              path: '/students',
+              });
+              console.log(data)
+              setStudents(data?.data);
+          } catch (error) {
+              console.error('Error fetching user profile:', error);
+          }
+
+      }
+      fetchStudents();
+  }, [])
+
+  const formatDate = (created_at) => {
+    const formattedDate = new Date(created_at).toLocaleString('en-US', {
+      // weekday: 'long',  // "Monday"
+      year: 'numeric',  // "2024"
+      month: 'long',  // "November"
+      day: 'numeric',  // "24"
+      // hour: '2-digit', // "06"
+      // minute: '2-digit', // "43"
+      // second: '2-digit', // "19"
+      // hour12: true // 12-hour clock (AM/PM)
+    });
+  
+    return formattedDate
+  }
+  
+
+
   const navigate = useNavigate();
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -51,36 +92,34 @@ const StudentsListTable = () => {
             </tr>
           </thead>
           <tbody>
-            {packageData.map((packageItem, key) => (
+            {students.map((student, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.name}
+                    {student?.first_name} {student?.last_name}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.invoiceDate}
+                    {formatDate(student.created_at)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      packageItem.status === 'Paid'
+                      student.is_active
                         ? 'bg-success text-success'
-                        : packageItem.status === 'Unpaid'
-                        ? 'bg-danger text-danger'
-                        : 'bg-warning text-warning'
+                        : 'bg-danger text-danger'
                     }`}
                   >
-                    {packageItem.status}
+                    {student.is_active ? "Active" : "In-active"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
                     <button
-                      onClick={()=> navigate('/students/R8CZ7WlWeG0M')} className="hover:text-primary">
+                      onClick={()=> navigate(`/students/${student.id}`)} className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"

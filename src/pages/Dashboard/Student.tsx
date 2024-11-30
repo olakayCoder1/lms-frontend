@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StudentCartOne from '../../components/Charts/StudentChartOne';
 import StudentMaterialTable from '../../components/Tables/StudentMaterialTable';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const Student: React.FC = () => {
+
+
+  const {authUser} = useContext(AuthContext)
+
+
   return (
     <>
       <Breadcrumb pageName="Dashboard" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
 
 
-        <CardDataStats title="Registered Courses" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Courses" total="2.450" rate="2.59%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -32,7 +38,7 @@ const Student: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Active Courses" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Materials" total="2.450" rate="2.59%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -54,7 +60,7 @@ const Student: React.FC = () => {
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <StudentCartOne />
+        <StudentCartOne user_id={authUser?.id}/>
         {/* <ChartTwo /> */}
         {/* <ChartThree /> */}
         {/* <MapOne /> */}

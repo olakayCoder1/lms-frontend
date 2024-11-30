@@ -1,8 +1,9 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Package } from '../../types/package';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const packageData: Package[] = [
   {
@@ -34,6 +35,28 @@ const packageData: Package[] = [
 const TutorCoursesTable = () => {
 
   const navigate = useNavigate();
+  const {fetchWithAuth,formatDate} = useContext(AuthContext)
+
+
+  const [videos, setVideos] = useState([])
+
+
+  useEffect(() => {
+    async function fetchVideos() {
+        try {
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/contents/videos/`,
+            });
+            // console.log(data)
+            setVideos(data);
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+
+    }
+    fetchVideos();
+  }, [])
 
 
 
@@ -49,29 +72,29 @@ const TutorCoursesTable = () => {
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Created
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              {/* <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Status
-              </th>
+              </th> */}
               <th className="py-4 px-4 font-medium text-black dark:text-white">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {packageData.map((packageItem, key) => (
+            {videos.map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.name}
+                    {packageItem.title}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.invoiceDate}
+                  {formatDate(packageItem.created_at)}
                   </p>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                {/* <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
                       packageItem.status === 'Paid'
@@ -83,10 +106,10 @@ const TutorCoursesTable = () => {
                   >
                     {packageItem.status}
                   </p>
-                </td>
+                </td> */}
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button onClick={() => navigate("/content-management/list/introduction-to-react")} className="hover:text-primary">
+                    <button onClick={() => navigate(`/content-management/list/${packageItem?.id}`)} className="hover:text-primary">
                       <svg
                         className="fill-current"
                         width="18"

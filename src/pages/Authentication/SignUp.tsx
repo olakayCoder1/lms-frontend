@@ -1,22 +1,81 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import LogoDark from '../../images/logo/logo-dark.svg';
-import Logo from '../../images/logo/logo.svg';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const SignUp: React.FC = () => {
 
+  const {authUser,authToken, setAuthUser,setAuthToken, BACKEND_URL , displayNotification} = useContext(AuthContext)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const navigate = useNavigate();
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  
   // create a state to store the form data
   const [formData, setFormData] = React.useState(
     {
-      name: '',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirm_password: ''
     }
   )
 
-  console.log(formData)
+  // Function to toggle password visibility
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(prevState => !prevState);
+  };
+
+
+  // using useEffect redirect user to dashbaord if authUser and token exist
+  React.useEffect(() => {
+    if (authUser && authToken) {
+      navigate("/dashboard");
+    }
+    }, []
+  )
+
+
+
+    // create a function to handle the form submission
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+        setIsLoading(true)
+        const response = await fetch(`${BACKEND_URL}/auth/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+            })
+            if (response.ok) {
+              const data = await response.json();
+              console.log(data?.data?.tokens)
+              localStorage.setItem('user', JSON.stringify(data?.data?.user))
+              setAuthUser(data?.data?.user)
+              localStorage.setItem('tokens', JSON.stringify(data?.data?.tokens))
+              setAuthToken(data?.data?.tokens)
+              setIsLoading(false)
+              
+              navigate("/dashboard");
+            } 
+            else {
+                const data = await response.json();
+                displayNotification('error',data?.detail)
+                setIsLoading(false)
+            }
+        } catch (error) {
+          displayNotification('error','Authentication could not be completed at the moment')
+          console.log(error)
+          setIsLoading(false)
+        }
+  
+    }
+  
+
+
   return (
     <>
       {/* <Breadcrumb pageName="Sign Up" /> */}
@@ -166,18 +225,58 @@ const SignUp: React.FC = () => {
                 Sign Up to Karantashi
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Name
+                    First Name
                   </label>
                   <div className="relative">
                     <input
-                      value={formData?.name}
+                      value={formData?.first_name}
                       onChange={
-                        (e) => { setFormData({ ...formData, name: e.target.value }); }
+                        (e) => { setFormData({ ...formData, first_name: e.target.value }); }
                       }
                       type="text"
+                      required={true}
+                      placeholder="Enter your full name"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+
+                    <span className="absolute right-4 top-4">
+                      <svg
+                        className="fill-current"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g opacity="0.5">
+                          <path
+                            d="M11.0008 9.52185C13.5445 9.52185 15.607 7.5281 15.607 5.0531C15.607 2.5781 13.5445 0.584351 11.0008 0.584351C8.45703 0.584351 6.39453 2.5781 6.39453 5.0531C6.39453 7.5281 8.45703 9.52185 11.0008 9.52185ZM11.0008 2.1656C12.6852 2.1656 14.0602 3.47185 14.0602 5.08748C14.0602 6.7031 12.6852 8.00935 11.0008 8.00935C9.31641 8.00935 7.94141 6.7031 7.94141 5.08748C7.94141 3.47185 9.31641 2.1656 11.0008 2.1656Z"
+                            fill=""
+                          />
+                          <path
+                            d="M13.2352 11.0687H8.76641C5.08828 11.0687 2.09766 14.0937 2.09766 17.7719V20.625C2.09766 21.0375 2.44141 21.4156 2.88828 21.4156C3.33516 21.4156 3.67891 21.0719 3.67891 20.625V17.7719C3.67891 14.9531 5.98203 12.6156 8.83516 12.6156H13.2695C16.0883 12.6156 18.4258 14.9187 18.4258 17.7719V20.625C18.4258 21.0375 18.7695 21.4156 19.2164 21.4156C19.6633 21.4156 20.007 21.0719 20.007 20.625V17.7719C19.9039 14.0937 16.9133 11.0687 13.2352 11.0687Z"
+                            fill=""
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Last Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      value={formData?.last_name}
+                      onChange={
+                        (e) => { setFormData({ ...formData, last_name: e.target.value }); }
+                      }
+                      type="text"
+                      required={true}
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -216,6 +315,7 @@ const SignUp: React.FC = () => {
                       onChange={
                         (e) => { setFormData({ ...formData, email: e.target.value }); }
                       }
+                      required={true}
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -251,7 +351,8 @@ const SignUp: React.FC = () => {
                       onChange={
                         (e) => { setFormData({ ...formData, password: e.target.value }); }
                       }
-                      type="password"
+                      required={true}
+                      type={isPasswordVisible ? 'text' : 'password'} 
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -286,11 +387,12 @@ const SignUp: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
-                      value={formData?.confirmPassword}
+                      value={formData?.confirm_password}
                       onChange={
-                        (e) => { setFormData({ ...formData, confirmPassword: e.target.value }); }
+                        (e) => { setFormData({ ...formData, confirm_password: e.target.value }); }
                       }
-                      type="password"
+                      required={true}
+                      type={isPasswordVisible ? 'text' : 'password'} 
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -319,50 +421,28 @@ const SignUp: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Checkbox to toggle password visibility */}
+                <div>
+                  <input
+                    type="checkbox"
+                    id="showPassword"
+                    checked={isPasswordVisible}
+                    onChange={togglePasswordVisibility}
+                    className=' mb-5'
+                  />
+                  <label htmlFor="showPassword" className='px-2'>Show password</label>
+                </div>
+
                 <div className="mb-5">
                   <input
+                    value={isLoading ? "Processing..." : "Create account"}
+                    disabled={isLoading}
                     type="submit"
-                    value="Create account"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
-                  <span>
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_191_13499)">
-                        <path
-                          d="M19.999 10.2217C20.0111 9.53428 19.9387 8.84788 19.7834 8.17737H10.2031V11.8884H15.8266C15.7201 12.5391 15.4804 13.162 15.1219 13.7195C14.7634 14.2771 14.2935 14.7578 13.7405 15.1328L13.7209 15.2571L16.7502 17.5568L16.96 17.5774C18.8873 15.8329 19.9986 13.2661 19.9986 10.2217"
-                          fill="#4285F4"
-                        />
-                        <path
-                          d="M10.2055 19.9999C12.9605 19.9999 15.2734 19.111 16.9629 17.5777L13.7429 15.1331C12.8813 15.7221 11.7248 16.1333 10.2055 16.1333C8.91513 16.1259 7.65991 15.7205 6.61791 14.9745C5.57592 14.2286 4.80007 13.1801 4.40044 11.9777L4.28085 11.9877L1.13101 14.3765L1.08984 14.4887C1.93817 16.1456 3.24007 17.5386 4.84997 18.5118C6.45987 19.4851 8.31429 20.0004 10.2059 19.9999"
-                          fill="#34A853"
-                        />
-                        <path
-                          d="M4.39899 11.9777C4.1758 11.3411 4.06063 10.673 4.05807 9.99996C4.06218 9.32799 4.1731 8.66075 4.38684 8.02225L4.38115 7.88968L1.19269 5.4624L1.0884 5.51101C0.372763 6.90343 0 8.4408 0 9.99987C0 11.5589 0.372763 13.0963 1.0884 14.4887L4.39899 11.9777Z"
-                          fill="#FBBC05"
-                        />
-                        <path
-                          d="M10.2059 3.86663C11.668 3.84438 13.0822 4.37803 14.1515 5.35558L17.0313 2.59996C15.1843 0.901848 12.7383 -0.0298855 10.2059 -3.6784e-05C8.31431 -0.000477834 6.4599 0.514732 4.85001 1.48798C3.24011 2.46124 1.9382 3.85416 1.08984 5.51101L4.38946 8.02225C4.79303 6.82005 5.57145 5.77231 6.61498 5.02675C7.65851 4.28118 8.9145 3.87541 10.2059 3.86663Z"
-                          fill="#EB4335"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_191_13499">
-                          <rect width="20" height="20" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </span>
-                  Sign up with Google
-                </button>
+ 
 
                 <div className="mt-6 text-center">
                   <p>

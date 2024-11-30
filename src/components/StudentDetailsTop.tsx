@@ -1,6 +1,6 @@
 import CoverOne from '../images/cover/cover-01.png';
 
-export default function StudentDetailsTop() {
+export default function StudentDetailsTop({student}) {
     
 
     return (
@@ -25,9 +25,9 @@ export default function StudentDetailsTop() {
           </div>
           <div className="mt-4">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              Olanrewaju AbdulKabeer
+              {student?.first_name} {student?.last_name}
             </h3>
-            <p className="font-medium">20/52HA000</p>
+            <p className="font-medium">{student?.email}</p>
           </div>
         </div>
       </div>

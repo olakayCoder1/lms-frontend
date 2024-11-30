@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Package } from '../../types/package';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/ContextProvider';
 
 const coursesData: Course[] = [
   {
@@ -33,38 +34,30 @@ const coursesData: Course[] = [
 
 const StudentCoursesTable = () => {
 
+  const {fetchWithAuth,formatDate} = useContext(AuthContext)
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
-  const modalRef = useRef<HTMLDivElement | null>(null);
+  const [courses, setCourses] = useState([])
+
   const navigate = useNavigate();
 
-  const docs = [
-    { uri: 'https://pdfobject.com/pdf/sample.pdf' }, // Remote file
-    // Add other document URLs here as needed
-  ];
-
-  const openModal = (docUri: string) => {
-    setSelectedDoc(docUri);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => setIsModalOpen(false);
-
-  // Close modal if clicked outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        closeModal();
-      }
-    };
+    async function fetchCourses() {
+        try {
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/contents/videos/`,
+            });
+            console.log(data)
+            setCourses(data);
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
 
-    // Add event listener for outside click
-    document.addEventListener('mousedown', handleClickOutside);
+    }
+    fetchCourses();
+  }, [])
 
-    // Cleanup event listener on component unmount
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+
   
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -84,22 +77,22 @@ const StudentCoursesTable = () => {
             </tr>
           </thead>
           <tbody>
-            {coursesData.map((packageItem, key) => (
+            {courses?.map((course, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.name}
+                    {course.title}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {packageItem.createdDate}
+                    {formatDate(course.created_at)}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button onClick={() => navigate("/mycourses/introduction-to-react")}
+                    <button onClick={() => navigate(`/mycourses/${course.id}`)}
                        className="hover:text-primary">
                       <svg
                         className="fill-current"
@@ -125,24 +118,6 @@ const StudentCoursesTable = () => {
             ))}
           </tbody>
         </table>
-        {isModalOpen && selectedDoc && (
-        <div className="fixed top-0 inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-9999">
-          <div
-            ref={modalRef}
-            className="bg-white rounded-lg shadow-lg w-full sm:w-3/4 max-w-3xl p-4 relative"
-          >
-            {/* Close button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-gray-800"
-            >
-              &times;
-            </button>
-            {/* Document viewer */}
-            <DocViewer className='w-full' documents={[{ uri: selectedDoc }]} pluginRenderers={DocViewerRenderers} />
-          </div>
-        </div>
-      )}
       </div>
     </div>
   );
