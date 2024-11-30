@@ -10,8 +10,8 @@ export const AuthContext = createContext()
 
 export default function AuthContextProvider({children}){
     
-    // const BACKEND_URL = 'https://lms-backend-ydwv.onrender.com/api/v1'
-    const BACKEND_URL = 'http://127.0.0.1:5000/api/v1'
+    const BACKEND_URL = 'https://lms-backend-ydwv.onrender.com/api/v1'
+    // const BACKEND_URL = 'http://127.0.0.1:5000/api/v1'
 
     const [ authUser , setAuthUser ] = React.useState(()=> JSON.parse(localStorage.getItem('user'))|| null);
     const [ authToken , setAuthToken ] = React.useState(()=> JSON.parse(localStorage.getItem('tokens'))|| null);
