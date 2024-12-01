@@ -328,7 +328,6 @@ const StudentMaterialTable = () => {
             method: 'GET',
             path: `/contents/materials/`,
             });
-            console.log(data)
             setMaterials(data);
             setIsLoading(false)
         } catch (error) {
@@ -339,6 +338,34 @@ const StudentMaterialTable = () => {
     }
     fetchMaterials();
   }, [])
+
+
+  const handleDownload = async (item) => {
+    // Create a link element for download
+    const link = document.createElement('a');
+    link.href = item.file; // Assuming item.file is the URL of the file
+    link.download = ''; // This attribute makes the browser download the file instead of navigating to it
+
+    // Append the link to the body (not visible to the user)
+    document.body.appendChild(link);
+    link.target = '_blank';
+    link.click();
+
+    // make api call to log the download
+    try {
+        await fetchWithAuth({
+        method: 'GET',
+        path: `/contents/material/${item?.id}/download`,
+        });
+    } catch (error) {
+    }
+
+
+
+    // Remove the link after triggering the download
+    document.body.removeChild(link);
+};
+
 
 
   return (
@@ -398,7 +425,7 @@ const StudentMaterialTable = () => {
                             />
                           </svg>
                         </button>
-                        <button className="hover:text-primary">
+                        <button onClick={()=> handleDownload(packageItem)} className="hover:text-primary">
                           <svg
                             className="fill-current"
                             width="18"
