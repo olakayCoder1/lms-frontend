@@ -17,6 +17,7 @@
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@react-pdf/renderer": "^4.1.4",
     "@stream-io/video-react-sdk": "^1.7.19",
+    "@zegocloud/zego-uikit-prebuilt": "^2.13.1",
     "apexcharts": "^3.41.0",
     "flatpickr": "^4.6.13",
     "global": "^4.4.0",

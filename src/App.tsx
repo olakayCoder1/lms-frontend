@@ -28,6 +28,8 @@ import TutorMaterialList from './pages/TutorMaterialList';
 import TutorContentList from './pages/TutorContentList';
 import MainDashboard from './pages/Dashboard/MainDashboard';
 import StudentDetails from './pages/StudentDetails';
+import LiveStream from './components/zegocloud/LiveStream';
+import Room from './components/zegocloud/Room';
 
 
 function App() {
@@ -90,10 +92,20 @@ function App() {
           element={
             <>
               <PageTitle title="Live Stream " />
-              <JoinLiveStreamPage />
+              <Room />
+              {/* <JoinLiveStreamPage /> */}
             </>
           }
         />
+        {/* <Route
+          path="/livestream"
+          element={
+            <>
+              <PageTitle title="Live Stream " />
+              <LiveStream />
+            </>
+          }
+        /> */}
         <Route
           path="/mycourses/:id"
           element={

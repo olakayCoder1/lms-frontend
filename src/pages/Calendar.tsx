@@ -155,7 +155,7 @@ const Calendar = () => {
             {isSelected && hasEvents && !isPastEvent && (
               <div onClick={() => {
                   if (isTodayEvent) {
-                    navigate('/livestream/R8CZ7WlWeG0M');
+                    navigate('/livestream/session');
                   }
                 }} className="event absolute left-2 top-8 z-50 flex w-[200%] flex-col rounded-sm border-l-[3px] border-primary bg-gray px-3 py-1 text-left opacity-100 dark:bg-meta-4">
                 <span className="event-name text-sm font-semibold text-black dark:text-white">
