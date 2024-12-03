@@ -91,17 +91,17 @@ const TutorCoursesTable = () => {
             </tr>
           </thead>
           <tbody>
-            {videos.map((packageItem, key) => (
+            {videos?.map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {packageItem.title}
+                    {packageItem?.title}
                   </h5>
                   {/* <p className="text-sm">${packageItem.price}</p> */}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                  {formatDate(packageItem.created_at)}
+                  {formatDate(packageItem?.created_at)}
                   </p>
                 </td>
                 {/* <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
