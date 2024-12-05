@@ -28,7 +28,7 @@ const SignUp: React.FC = () => {
   };
 
 
-  // using useEffect redirect user to dashbaord if authUser and token exist
+  // using useEffect redirect user to dashboard if authUser and token exist
   React.useEffect(() => {
     if (authUser && authToken) {
       navigate("/dashboard");

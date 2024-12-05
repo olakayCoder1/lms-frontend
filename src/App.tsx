@@ -30,6 +30,9 @@ import MainDashboard from './pages/Dashboard/MainDashboard';
 import StudentDetails from './pages/StudentDetails';
 import LiveStream from './components/zegocloud/LiveStream';
 import Room from './components/zegocloud/Room';
+import LecturersList from './pages/LecturersList';
+import CoursesList from './pages/CoursesList';
+import NewCourseForm from './pages/Form/NewCourseForm';
 
 
 function App() {
@@ -73,7 +76,7 @@ function App() {
           path="/dashboard"
           element={
             <>
-              <PageTitle title="Dashbaord " />
+              <PageTitle title="Dashboard " />
               <MainDashboard />
             </>
           }
@@ -202,6 +205,33 @@ function App() {
             <>
               <PageTitle title="Form Elements " />
               <NewMaterialForm />
+            </>
+          }
+        />
+        <Route
+          path="/course-management/list"
+          element={
+            <>
+              <PageTitle title="Courses " />
+              <CoursesList />
+            </>
+          }
+        />
+        <Route
+          path="/course-management/new"
+          element={
+            <>
+              <PageTitle title="Add Course " />
+              <NewCourseForm />
+            </>
+          }
+        />
+        <Route
+          path="/lecturers"
+          element={
+            <>
+              <PageTitle title="Lecturers " />
+              <LecturersList />
             </>
           }
         />

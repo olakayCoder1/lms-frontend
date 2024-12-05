@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { AuthContext } from '../../contexts/ContextProvider'
 import Student from './Student'
 import Tutor from './Tutor'
+import Admin from './Admin'
 
 
 export default function MainDashboard() {
@@ -16,7 +17,9 @@ export default function MainDashboard() {
             authUser?.role === "tutor" ? (
                 <Tutor />
             ):(
-                <Student />
+                authUser?.role === 'admin' ? (
+                    <Admin />
+                ): (<Student />)
             )
         }
             

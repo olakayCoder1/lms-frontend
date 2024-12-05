@@ -328,7 +328,7 @@ const StudentMaterialTable = () => {
             method: 'GET',
             path: `/contents/materials/`,
             });
-            setMaterials(data);
+            setMaterials(data?.data);
             setIsLoading(false)
         } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -390,7 +390,7 @@ const StudentMaterialTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {materials.map((packageItem, key) => (
+                {materials?.map((packageItem, key) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
