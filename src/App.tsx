@@ -33,6 +33,7 @@ import Room from './components/zegocloud/Room';
 import LecturersList from './pages/LecturersList';
 import CoursesList from './pages/CoursesList';
 import NewCourseForm from './pages/Form/NewCourseForm';
+import NewLectureForm from './pages/Form/NewLectureForm';
 
 
 function App() {
@@ -227,11 +228,20 @@ function App() {
           }
         />
         <Route
-          path="/lecturers"
+          path="/lecturers/list"
           element={
             <>
               <PageTitle title="Lecturers " />
               <LecturersList />
+            </>
+          }
+        />
+        <Route
+          path="/lecturers/new"
+          element={
+            <>
+              <PageTitle title="Add Lecturer " />
+              <NewLectureForm />
             </>
           }
         />

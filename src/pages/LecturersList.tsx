@@ -40,7 +40,7 @@ export default function LecturersList() {
 
     return (
         <>
-        <Breadcrumb pageName="Materials" />
+        <Breadcrumb pageName="Lecturers" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5 mb-12">
             <CardDataStats title="Total Lectures" total={lecturersOverview?.total_tutors} isLoading={isLoading}>
                 <svg
