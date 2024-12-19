@@ -38,6 +38,7 @@ import QuizPage from './pages/QuizPage';
 import AddQuizQuestionForm from './pages/Form/AddQuizQuestionForm';
 import QuizListTable from './components/Tables/QuizListTable';
 import QuizViewEditPage from './pages/QuizViewEditPage';
+import QuizTakingComponent from './components/QuizTakingComponent';
 
 
 function App() {
@@ -142,11 +143,11 @@ function App() {
           }
         />
         <Route
-          path="/quiz"
+          path="/take-quiz/:id"
           element={
             <>
               <PageTitle title="Quiz " />
-              <QuizPage />
+              <QuizTakingComponent />
             </>
           }
         />
