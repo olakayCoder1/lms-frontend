@@ -4,7 +4,6 @@ import { AuthContext } from '../contexts/ContextProvider';
 
 const QuizTakingComponent = () => {
   const { fetchWithAuth, displayNotification } = useContext(AuthContext);
-  const { quizId } = useParams(); // To get the quizId from the URL
   const navigate = useNavigate();
   const { id } = useParams(); 
   
@@ -40,7 +39,7 @@ const QuizTakingComponent = () => {
   };
 
 
-  console.log(quizData)
+  console.log(userAnswers)
 
   // Handle quiz submission
   const handleSubmitQuiz = async () => {
@@ -54,11 +53,10 @@ const QuizTakingComponent = () => {
       });
 
       // Handle response (e.g., display results)
-      displayNotification('success', 'Quiz submitted successfully!');
-      navigate(`/quiz-results/${id}`, { state: { result: response?.data } }); // Navigate to results page
+      displayNotification('success', response?.message);
+      // navigate(`/quiz-results/${id}`, { state: { result: response?.data } }); // Navigate to results page
     } catch (error) {
       console.error('Error submitting quiz:', error);
-      displayNotification('error', 'Failed to submit quiz');
     }
   };
 
@@ -73,7 +71,7 @@ const QuizTakingComponent = () => {
 
       <form className="space-y-6">
         {quizData?.questions?.map((question, first_index) => (
-          <div key={question.id} className="question-container">
+          <div key={first_index} className="question-container">
             <p className="text-lg font-medium">{first_index + 1}. {question.question_text}</p>
             <div className="options">
               {question?.answers.map((option, index) => (
@@ -84,7 +82,7 @@ const QuizTakingComponent = () => {
                     name={`question-${question.id}`}
                     value={option}
                     checked={userAnswers[question.id] === option}
-                    onChange={() => handleAnswerChange(question.id, index)}
+                    onChange={() => handleAnswerChange(question.id, option)}
                     className="form-radio"
                   />
                   <label htmlFor={`q-${index}-o-${index}`} className="text-md">
@@ -99,7 +97,7 @@ const QuizTakingComponent = () => {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => navigate(`/quizzes`)} // Navigate back to the quiz list
+            onClick={() => navigate(`/dashboard`)} // Navigate back to the quiz list
             className="py-2 px-4 bg-gray-300 text-black rounded-lg"
           >
             Cancel

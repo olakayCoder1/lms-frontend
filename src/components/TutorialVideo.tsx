@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../contexts/ContextProvider';
+import { useNavigate } from 'react-router-dom';
 
 interface TutorialVideoProps {
   videoUrl: string;
@@ -8,9 +9,10 @@ interface TutorialVideoProps {
   materials: { title: string; url: string }[];
   userId: string; // Assume you have a user ID to track their progress
 }
-const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, description, materials,videoId }) => {
+const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, description, materials,videoId,quiz }) => {
 
   const {fetchWithAuth} = useContext(AuthContext)
+  const navigate = useNavigate();
 
   async function fetchUpdateProgress() {
     try {
@@ -28,7 +30,14 @@ const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, descript
   return (
     <div className="max-w-4xl mx-auto p-4 shadow-lg rounded-lg">
       {/* Title */}
-      <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+      <div className=' flex justify-between items-center'>
+
+        <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+
+        <button onClick={()=> navigate(`/take-quiz/${quiz}`)} className=" bg-blue-700 text-white rounded-md px-2 py-1">Start Quiz</button>
+
+      </div>
+
 
       {/* Video Player */}
       <div className="mt-4">

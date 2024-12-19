@@ -19,8 +19,7 @@ const TutorialPage: React.FC = () => {
             method: 'GET',
             path: `/contents/video/${id}/`,
             });
-            console.log(data)
-            setCourse(data);
+            setCourse(data?.data);
         } catch (error) {
             console.error('Error fetching user profile:', error);
         }
@@ -37,7 +36,9 @@ const TutorialPage: React.FC = () => {
             videoUrl={course?.video_url}
             title={course?.title}
             description={course?.description}
-            materials={course?.materials || []} videoId={course?.id}        
+            has_taken_quiz={course?.has_taken_quiz}
+            materials={course?.materials || []} videoId={course?.id}   
+            quiz={course?.quiz}     
         />
       </div>
     </div>
