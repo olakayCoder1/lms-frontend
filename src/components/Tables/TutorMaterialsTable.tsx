@@ -12,8 +12,10 @@ const TutorMaterialsTable = () => {
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const {fetchWithAuth,formatDate} = useContext(AuthContext);
+  const {fetchWithAuth,formatDate,displayNotification} = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showModal, setShowModal] = useState(false); // State for showing the modal
+  const [materialToDelete, setMaterialToDelete] = useState(null); // Store the ID of the quiz to be deleted
 
   const [materials, setMaterials] = useState([])
 
@@ -102,6 +104,28 @@ const TutorMaterialsTable = () => {
     fetchMaterials();
     navigate(`?search=${searchQuery}`, { replace: true });
   }
+
+
+  // Function to handle the delete action
+  const handleDelete = async () => {
+    if (!materialToDelete) return;
+
+    try {
+      await fetchWithAuth({
+        method: 'DELETE',
+        path: `/contents/material/${materialToDelete}`,
+      });
+      // Filter out the deleted quiz from the state
+      setMaterials((prevQuizzes) => prevQuizzes.filter((material) => material.id !== materialToDelete));
+      displayNotification('success', 'Material deleted successfully!');
+      setShowModal(false);
+      navigate('/material-management/list')
+      
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      displayNotification('error', 'Failed to delete quiz');
+    }
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -224,7 +248,12 @@ const TutorMaterialsTable = () => {
                             />
                           </svg>
                         </button>
-                        <button className="hover:text-primary">
+                        <button
+                          onClick={() => {
+                            setMaterialToDelete(packageItem.id); 
+                            setShowModal(true); 
+                          }}
+                         className="hover:text-primary">
                           <svg
                             className="fill-current"
                             width="18"
@@ -284,23 +313,45 @@ const TutorMaterialsTable = () => {
         
 
         {isModalOpen && selectedDoc && (
-        <div className="fixed top-0 inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-9999">
-          <div
-            ref={modalRef}
-            className="bg-white rounded-lg shadow-lg w-full sm:w-3/4 max-w-3xl p-4 relative"
-          >
-            {/* Close button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-gray-800"
+          <div className="fixed top-0 inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75 z-9999">
+            <div
+              ref={modalRef}
+              className="bg-white rounded-lg shadow-lg w-full sm:w-3/4 max-w-3xl p-4 relative"
             >
-              &times;
-            </button>
-            {/* Document viewer */}
-            <DocViewer className='w-full' documents={[{ uri: selectedDoc }]} pluginRenderers={DocViewerRenderers} />
+              {/* Close button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-gray-800"
+              >
+                &times;
+              </button>
+              {/* Document viewer */}
+              <DocViewer className='w-full' documents={[{ uri: selectedDoc }]} pluginRenderers={DocViewerRenderers} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+        {/* Confirmation Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+              <h3 className="text-lg font-medium text-black">Are you sure you want to delete this material?</h3>
+              <div className="mt-4 flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="py-2 px-4 bg-gray-300 text-black rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="py-2 px-4 bg-red-500 text-white rounded-lg"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -176,6 +176,10 @@ export default function AuthContextProvider({children}){
               if(response.status === 401){
                 deleteUserFromLocalStorage()
               }
+              if(response.status === 500){
+                const errorData = await response.json(); 
+                displayNotification('error',errorData?.message)
+              }
               throw new Error(`Error fetching data from ${path}: ${response.statusText}`);
             }
 
@@ -195,6 +199,10 @@ export default function AuthContextProvider({children}){
             const errorData = await response.json();
             displayNotification('error',errorData?.message)
             throw new Error(errorData?.message)
+          }
+          if(response.status === 500){
+            const errorData = await response.json(); 
+            displayNotification('error',errorData?.message)
           }
           throw new Error(`Error fetching data from ${path}: ${response.statusText}`);
         }

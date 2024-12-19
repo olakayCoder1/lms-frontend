@@ -34,6 +34,10 @@ import LecturersList from './pages/LecturersList';
 import CoursesList from './pages/CoursesList';
 import NewCourseForm from './pages/Form/NewCourseForm';
 import NewLectureForm from './pages/Form/NewLectureForm';
+import QuizPage from './pages/QuizPage';
+import AddQuizQuestionForm from './pages/Form/AddQuizQuestionForm';
+import QuizListTable from './components/Tables/QuizListTable';
+import QuizViewEditPage from './pages/QuizViewEditPage';
 
 
 function App() {
@@ -138,6 +142,16 @@ function App() {
           }
         />
         <Route
+          path="/quiz"
+          element={
+            <>
+              <PageTitle title="Quiz " />
+              <QuizPage />
+            </>
+          }
+        />
+        
+        <Route
           path="/students"
           element={
             <>
@@ -206,6 +220,33 @@ function App() {
             <>
               <PageTitle title="Form Elements " />
               <NewMaterialForm />
+            </>
+          }
+        />
+        <Route
+          path="/quiz-management/list"
+          element={
+            <>
+              <PageTitle title="Quiz " />
+              <QuizListTable />
+            </>
+          }
+        />
+        <Route
+          path="/quiz-management/list/:id"
+          element={
+            <>
+              <PageTitle title="Quiz " />
+              <QuizViewEditPage />
+            </>
+          }
+        />
+        <Route
+          path="/quiz-management/new"
+          element={
+            <>
+              <PageTitle title="Quiz " />
+              <AddQuizQuestionForm />
             </>
           }
         />

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NewMaterialForm = () => {
 
-  const {fetchWithAuth,authToken,BACKEND_URL,displayNotification} = useContext(AuthContext)
+  const {fetchWithAuth,authToken,BACKEND_URL,displayNotification,authUser} = useContext(AuthContext)
 
   const [title, setTitle] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
@@ -33,47 +33,6 @@ const NewMaterialForm = () => {
     setIsOptionSelected(true);
   };
 
-  // Handle form submission
-  const handleSubmit1 = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  
-    // Basic form validation
-    if (!title || !file || !selectedOption) {
-      setFormError('All fields are required');
-      return;
-    }
-  
-    // Prepare form data for file upload
-    const formData = new FormData();
-
-    formData.append('title', title);
-    
-    if (file) {
-      formData.append('file', file);  // Ensure file is appended correctly
-    } else {
-      console.log('No file selected');
-    }
-
-    formData.append('status', selectedOption);
-  
-    // Log formData content by iterating through its entries
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
-    try {
-        const data = await fetchWithAuth({
-        method: 'POST',
-        path: `/contents/materials/`,
-        body: formData,
-        isformData: true
-        });
-        console.log(data)
-        // setMaterials(data);
-    } catch (error) {
-        console.error('Error fetching user profile:', error);
-    }
-  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     // Prevent the default form submission behavior
@@ -95,7 +54,9 @@ const NewMaterialForm = () => {
         console.log('No file selected');
     }
 
-    formData.append('status', selectedOption);
+    formData.append('status', "publish");
+
+    formData.append('course', selectedOption);
 
     // Log formData content by iterating through its entries
     for (let [key, value] of formData.entries()) {
@@ -190,7 +151,7 @@ const NewMaterialForm = () => {
               {/* Material Status (Dropdown) */}
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Subject
+                  Course
                 </label>
                 <div className="relative z-20 bg-transparent dark:bg-form-input">
                   <select
@@ -201,14 +162,14 @@ const NewMaterialForm = () => {
                     }`}
                   >
                     <option value="" disabled className="text-body dark:text-bodydark">
-                      Select material status
+                      Select course status
                     </option>
-                    <option value="draft" className="text-body dark:text-bodydark">
-                      Draft
-                    </option>
-                    <option value="publish" className="text-body dark:text-bodydark">
-                      Publish
-                    </option>
+                    {authUser?.courses.map((option) => (
+                      <option value={option.id} key={option.id} className="text-body dark:text-bodydark">
+                        {option?.title}
+                      </option>
+                    ))
+                    }
                   </select>
                   <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
                     <svg

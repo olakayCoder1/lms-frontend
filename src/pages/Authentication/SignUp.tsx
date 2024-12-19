@@ -7,6 +7,40 @@ const SignUp: React.FC = () => {
   const {authUser,authToken, setAuthUser,setAuthToken, BACKEND_URL , displayNotification} = useContext(AuthContext)
   const [isLoading, setIsLoading] = React.useState(false)
   const navigate = useNavigate();
+  const [ethnicity, setEthnicity] = useState(
+    [
+      "Hausa-Fulani",
+      "Yoruba",
+      "Igbo",
+      "Kanuri",
+      "Ibibio",
+      "Tiv",
+      "Ijaw",
+      "Edo (Bini)",
+      "Nupé",
+      "Efik",
+      "Nupe",
+      "Gbagyi (Gbagwon)",
+      "Jukun",
+      "Shona",
+      "Kanembu",
+      "Idoma",
+      "Agatu",
+      "Ebira",
+      "Ogbia",
+      "Efik",
+      "Ngas",
+      "Jaba",
+      "Anang",
+      "Shu'arab",
+      "Kabba",
+      "Berom",
+      "Afenmai",
+      "Bachama",
+      "Bununu"
+    ]
+    
+  )
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -18,6 +52,8 @@ const SignUp: React.FC = () => {
       last_name: '',
       email: '',
       password: '',
+      gender: '',
+      ethnicity: '',
       confirm_password: ''
     }
   )
@@ -341,6 +377,55 @@ const SignUp: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Instructor Dropdown */}
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Gender
+                  </label>
+                  <div className="relative z-20 bg-transparent dark:bg-form-input">
+                    <select
+                      value={formData.gender}
+                      required={true}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                      className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
+                    >
+                      <option value="" disabled className="text-body dark:text-bodydark">
+                        Select Gender
+                      </option>
+                      {['male','female']?.map((tutor) => (
+                        <option key={tutor} value={tutor} className="text-body dark:text-bodydark">
+                          {tutor}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+
+                {/* Instructor Dropdown */}
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Ethnicity
+                  </label>
+                  <div className="relative z-20 bg-transparent dark:bg-form-input">
+                    <select
+                      value={formData.ethnicity}
+                      required={true}
+                      onChange={(e) => setFormData({ ...formData, ethnicity: e.target.value })}
+                      className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
+                    >
+                      <option value="" disabled className="text-body dark:text-bodydark">
+                        Select Ethnic
+                      </option>
+                      {ethnicity?.map((tutor) => (
+                        <option key={tutor} value={tutor} className="text-body dark:text-bodydark">
+                          {tutor}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Password

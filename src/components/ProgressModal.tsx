@@ -9,7 +9,7 @@ interface ProgressModalProps {
 const ProgressModal: React.FC<ProgressModalProps> = ({ progress, isUploading, onClose }) => {
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity ${
+      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity z-99999 ${
         isUploading ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >

@@ -10,9 +10,11 @@ import InAppLoader from '../InAppLoader';
 const TutorCoursesTable = () => {
 
   const navigate = useNavigate();
-  const {fetchWithAuth,formatDate} = useContext(AuthContext)
+  const {fetchWithAuth,formatDate,displayNotification} = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('');
+  const [showModal, setShowModal] = useState(false); // State for showing the modal
+  const [contentToDelete, setContentToDelete] = useState(null); // Store the ID of the quiz to be deleted
 
 
   const [videos, setVideos] = useState([])
@@ -73,6 +75,29 @@ const TutorCoursesTable = () => {
     fetchVideos();
     navigate(`?search=${searchQuery}`, { replace: true });
   }
+
+
+
+  // Function to handle the delete action
+  const handleDelete = async () => {
+    if (!contentToDelete) return;
+
+    try {
+      await fetchWithAuth({
+        method: 'DELETE',
+        path: `/contents/video/${contentToDelete}`,
+      });
+      // Filter out the deleted quiz from the state
+      setVideos((prevQuizzes) => prevQuizzes.filter((material) => material.id !== contentToDelete));
+      displayNotification('success', 'Material deleted successfully!');
+      setShowModal(false);
+      navigate('/content-management/list')
+      
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      displayNotification('error', 'Failed to delete quiz');
+    }
+  };
 
 
   return (
@@ -193,7 +218,12 @@ const TutorCoursesTable = () => {
                             />
                           </svg>
                         </button>
-                        <button className="hover:text-primary">
+                        <button 
+                          onClick={() => {
+                            setContentToDelete(packageItem.id); 
+                            setShowModal(true); 
+                          }}
+                          className="hover:text-primary">
                           <svg
                             className="fill-current"
                             width="18"
@@ -232,6 +262,29 @@ const TutorCoursesTable = () => {
           )
         }
         
+
+        {/* Confirmation Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+              <h3 className="text-lg font-medium text-black">Are you sure you want to delete this material?</h3>
+              <div className="mt-4 flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="py-2 px-4 bg-gray-300 text-black rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="py-2 px-4 bg-red-500 text-white rounded-lg"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
   
       </div>

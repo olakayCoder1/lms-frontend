@@ -36,16 +36,20 @@
 
 // export default DefaultLayout;
 
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useContext } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
+import { AuthContext } from '../contexts/ContextProvider';
+import CourseRegistration from '../components/CourseRegistration';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {authUser} = useContext(AuthContext)
   
   // Get the current location (route)
   const location = useLocation();
+
 
   // Check if the current path is in the excluded list
   const isAuthPage = ['/login', '/register','/auth/signup','/auth/signin'].includes(location.pathname);
@@ -54,22 +58,33 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* Only render the page wrapper if not on the auth pages */}
       {!isAuthPage && location.pathname != '/'  ? (
-        <div className="flex h-screen overflow-hidden">
-          {/* Sidebar only if not on auth pages */}
-          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          
-          {/* Content Area */}
-          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-            {/* Header only if not on auth pages */}
-            <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-            
-            <main>
-              <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                {children}
+        <>
+          {!authUser?.has_registered_courses && authUser.role === 'student' ? (
+            <CourseRegistration />
+        ) : (
+            <>
+              <div className="flex h-screen overflow-hidden">
+                {/* Sidebar only if not on auth pages */}
+                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                
+                {/* Content Area */}
+                <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+                  {/* Header only if not on auth pages */}
+                  <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                  
+                  <main>
+                    <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                      {children}
+                    </div>
+                  </main>
+                </div>
               </div>
-            </main>
-          </div>
-        </div>
+            </>
+          )
+        }
+        </>
+        
+        
       ): (
         <main>{children}</main>
       )}
