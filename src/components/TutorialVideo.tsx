@@ -9,7 +9,7 @@ interface TutorialVideoProps {
   materials: { title: string; url: string }[];
   userId: string; // Assume you have a user ID to track their progress
 }
-const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, description, materials,videoId,quiz }) => {
+const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, description,has_taken_quiz, materials,videoId,quiz }) => {
 
   const {fetchWithAuth} = useContext(AuthContext)
   const navigate = useNavigate();
@@ -34,7 +34,8 @@ const TutorialVideo: React.FC<TutorialVideoProps> = ({ videoUrl, title, descript
 
         <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
 
-        <button onClick={()=> navigate(`/take-quiz/${quiz}`)} className=" bg-blue-700 text-white rounded-md px-2 py-1">Start Quiz</button>
+        {!has_taken_quiz && <button onClick={()=> navigate(`/take-quiz/${quiz}`)} className=" bg-blue-700 text-white rounded-md px-2 py-1">Start Quiz</button>}
+        
 
       </div>
 

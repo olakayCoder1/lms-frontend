@@ -36,7 +36,7 @@ const TutorialPage: React.FC = () => {
             videoUrl={course?.video_url}
             title={course?.title}
             description={course?.description}
-            has_taken_quiz={course?.has_taken_quiz}
+            has_taken_quiz={course?.has_taken_test}
             materials={course?.materials || []} videoId={course?.id}   
             quiz={course?.quiz}     
         />

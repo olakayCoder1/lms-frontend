@@ -30,7 +30,8 @@ const Calendar = () => {
   // Get events for specific days (Monday, Tuesday, Thursday)
   const getEventsForDay = (day: number, weekday: number) => {
     const events: any[] = [];
-    if (weekday === 1 || weekday === 2 || weekday === 4 || weekday === 6) {
+    if (weekday === 1 || weekday === 3 ) {
+      // if (weekday === 1 || weekday === 2 || weekday === 4 || weekday === 5) {
       // Example event
       events.push({
         name: 'App Design',
