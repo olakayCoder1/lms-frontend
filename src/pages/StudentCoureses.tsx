@@ -4,7 +4,7 @@ import StudentCoursesTable from '../components/Tables/StudentCoursesTable';
 const StudentCoureses = () => {
   return (
     <>
-      <Breadcrumb pageName="Courses" />
+      <Breadcrumb pageName="Contents" />
 
       <div className="flex flex-col gap-10">
         <StudentCoursesTable />
