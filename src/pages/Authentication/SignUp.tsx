@@ -392,8 +392,8 @@ const SignUp: React.FC = () => {
                       <option value="" disabled className="text-body dark:text-bodydark">
                         Select Gender
                       </option>
-                      {['male','female']?.map((tutor) => (
-                        <option key={tutor} value={tutor} className="text-body dark:text-bodydark">
+                      {['male','female']?.map((tutor,index) => (
+                        <option key={index} value={tutor} className="text-body dark:text-bodydark">
                           {tutor}
                         </option>
                       ))}
@@ -417,8 +417,8 @@ const SignUp: React.FC = () => {
                       <option value="" disabled className="text-body dark:text-bodydark">
                         Select Ethnic
                       </option>
-                      {ethnicity?.map((tutor) => (
-                        <option key={tutor} value={tutor} className="text-body dark:text-bodydark">
+                      {ethnicity?.map((tutor,index) => (
+                        <option key={index} value={tutor} className="text-body dark:text-bodydark">
                           {tutor}
                         </option>
                       ))}

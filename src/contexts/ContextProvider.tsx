@@ -10,13 +10,15 @@ export const AuthContext = createContext()
 
 export default function AuthContextProvider({children}){
     
-    const BACKEND_URL = 'https://lms-backend-ydwv.onrender.com/api/v1'
-    // const BACKEND_URL = 'http://127.0.0.1:8000/api/v1'
+    // const BACKEND_URL = 'https://lms-backend-ydwv.onrender.com/api/v1'
+    const BACKEND_URL = 'http://127.0.0.1:8000/api/v1'
+
 
     const [ authUser , setAuthUser ] = React.useState(()=> JSON.parse(localStorage.getItem('user'))|| null);
     const [ authToken , setAuthToken ] = React.useState(()=> JSON.parse(localStorage.getItem('tokens'))|| null);
 
-    const [ isLoading , setIsLoading ] = useState(null)
+    const [ isLoading , setIsLoading ] = useState(null);
+    
 
     
     function displayNotification(type: string, text: any ){
@@ -102,7 +104,15 @@ export default function AuthContextProvider({children}){
     // Run the fetchUserProfile function when the component mounts
     useEffect(() => {
         if (authToken && !authUser) {
-        fetchUserProfile();  // Fetch updated user profile if user exists but no profile is set
+          fetchUserProfile();  // Fetch updated user profile if user exists but no profile is set
+        }else{
+          
+          
+
+          // const isAuthPage = ['/login', '/register','/auth/signup','/auth/signin'].includes(window.location.pathname);
+          // if (!isAuthPage) {
+          //   deleteUserFromLocalStorage(); 
+          // }
         }
     }, [authToken, authUser]);  // Depend on authToken and authUser
 
