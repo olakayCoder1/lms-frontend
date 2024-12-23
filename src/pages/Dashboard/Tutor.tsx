@@ -19,7 +19,7 @@ const Tutor: React.FC = () => {
             setIsLoading(true)
             const data = await fetchWithAuth({
             method: 'GET',
-            path: `/admin/dashboard/overview`,
+            path: `/tutor/dashboard/overview`,
             });
             console.log(data?.data)
             setOverviewData(data?.data);
@@ -42,7 +42,7 @@ const Tutor: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5">
 
 
-        <CardDataStats title="Registered Student" total={overviewData?.total_students}  isLoading={isLoading}>
+        <CardDataStats title="Registered Student" total={overviewData?.registered_student_count}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -63,7 +63,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Active Student" total={overviewData?.active_students}  isLoading={isLoading}>
+        <CardDataStats title="Active Student" total={overviewData?.active_student_count}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -84,7 +84,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Total Content" total={overviewData?.video_count}  isLoading={isLoading}>
+        <CardDataStats title="Total Content" total={overviewData?.total_content_uploaded}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -105,7 +105,7 @@ const Tutor: React.FC = () => {
         </CardDataStats>
 
 
-        <CardDataStats title="Total Materials" total={overviewData?.material_count}  isLoading={isLoading}>
+        <CardDataStats title="Total Materials" total={overviewData?.total_materials_uploaded}  isLoading={isLoading}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"

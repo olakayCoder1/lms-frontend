@@ -11,6 +11,7 @@ const Student: React.FC = () => {
   const {authUser,fetchWithAuth} = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const [overviewData, setOverviewData] = useState({})
+  const [projectCGPA, setProjectCGPA] = useState({})
 
 
 
@@ -29,16 +30,40 @@ const Student: React.FC = () => {
             console.error('Error fetching user profile:', error);
             setIsLoading(false)
         }
-
     }
     fetchOverview();
+  }, [])
+
+
+  useEffect(() => {
+    async function fetchPrediction() {
+        try {
+            setIsLoading(true)
+            const data = await fetchWithAuth({
+            method: 'GET',
+            path: `/predict-performance`,
+            });
+            console.log(data?.data)
+            setProjectCGPA(data?.data)
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            setIsLoading(false)
+        }
+
+    }
+    fetchPrediction();
   }, [])
 
   return (
     <>
       <Breadcrumb pageName="Dashboard" />
+      <h2 className="text-title-md2 font-semibold text-black dark:text-white py-4">
+          Projected CGPA : {projectCGPA?.prediction || 'None'}
+      </h2>
+      <h1>
+        
+      </h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-
 
         <CardDataStats title="Registered Courses" total={overviewData?.registered_courses_count} isLoading={isLoading}>
           <svg
@@ -79,7 +104,6 @@ const Student: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-
 
         <CardDataStats title="Engaged Materials" total={overviewData?.download_count} isLoading={isLoading}>
           <svg
