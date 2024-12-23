@@ -77,8 +77,7 @@ const SignIn: React.FC = () => {
               </Link> */}
 
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+              Welcome to Academia360 -- Where learning meets innovation! Track your progress, stay engaged, and unlock your full potential today!
               </p>
 
               <span className="mt-15 inline-block">
@@ -210,7 +209,7 @@ const SignIn: React.FC = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               {/* <span className="mb-1.5 block font-medium">Start for free</span> */}
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign In to Karantashi
+                Sign In to Academia360
               </h2>
 
               <form onSubmit={handleSubmit}>
@@ -226,7 +225,7 @@ const SignIn: React.FC = () => {
                       onChange={
                         (e) => { setFormData({ ...formData, email: e.target.value }); }
                       }
-                      placeholder="Enter your email"
+                      placeholder="Staff/Student Email"
                       required={true}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -263,7 +262,7 @@ const SignIn: React.FC = () => {
                       onChange={
                         (e) => { setFormData({ ...formData, password: e.target.value }); }
                       }
-                      placeholder="6+ Characters, 1 Capital letter"
+                      placeholder="Password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 

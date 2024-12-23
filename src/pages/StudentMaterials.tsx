@@ -4,7 +4,7 @@ import StudentMaterialTable from '../components/Tables/StudentMaterialTable';
 const StudentMaterials = () => {
   return (
     <>
-      <Breadcrumb pageName="Materials" />
+      <Breadcrumb pageName="Course Materials" />
 
       <div className="flex flex-col gap-10">
         <StudentMaterialTable />

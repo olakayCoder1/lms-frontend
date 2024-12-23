@@ -137,7 +137,7 @@ function App() {
           path="/materials"
           element={
             <>
-              <PageTitle title="Materials " />
+              <PageTitle title="Course Materials " />
               <StudentMaterials />
             </>
           }

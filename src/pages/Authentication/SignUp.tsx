@@ -125,8 +125,7 @@ const SignUp: React.FC = () => {
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link> */}
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+                Welcome to Academia360 -- Where learning meets innovation! Track your progress, stay engaged, and unlock your full potential today!
               </p>
 
               <span className="mt-15 inline-block">
@@ -258,7 +257,7 @@ const SignUp: React.FC = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               {/* <span className="mb-1.5 block font-medium">Start for free</span> */}
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign Up to Karantashi
+                Sign Up to Academia360
               </h2>
 
               <form onSubmit={handleSubmit}>
@@ -390,11 +389,11 @@ const SignUp: React.FC = () => {
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
                     >
                       <option value="" disabled className="text-body dark:text-bodydark">
-                        Select Gender
+                        Select gender
                       </option>
                       {['male','female']?.map((tutor,index) => (
                         <option key={index} value={tutor} className="text-body dark:text-bodydark">
-                          {tutor}
+                          {tutor.replace(/^./, tutor[0].toUpperCase())}
                         </option>
                       ))}
                     </select>
@@ -415,7 +414,7 @@ const SignUp: React.FC = () => {
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
                     >
                       <option value="" disabled className="text-body dark:text-bodydark">
-                        Select Ethnic
+                        Select ethnic
                       </option>
                       {ethnicity?.map((tutor,index) => (
                         <option key={index} value={tutor} className="text-body dark:text-bodydark">
