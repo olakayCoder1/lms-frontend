@@ -173,7 +173,12 @@ const Header = (props: {
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* Conditionally render the "Start Live Class" button */}
-            {showLiveClassButton && authUser?.role === "tutor" && (
+            {/* {showLiveClassButton && authUser?.role === "tutor" && (
+              <div className="start-live-class-btn">
+                <button onClick={()=> navigate('/livestream/session')} className=" bg-blue-700 text-white rounded-md px-2 py-1">Start Class</button>
+              </div>
+            )} */}
+             {authUser?.role === "tutor" && (
               <div className="start-live-class-btn">
                 <button onClick={()=> navigate('/livestream/session')} className=" bg-blue-700 text-white rounded-md px-2 py-1">Start Class</button>
               </div>
