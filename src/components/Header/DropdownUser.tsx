@@ -22,7 +22,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src='https://avatars.githubusercontent.com/u/95700260?s=400&u=8a038fc4fa00588887195b84026eb610c9213b4f&v=4' alt="User" className="h-12 w-12 rounded-full" />
+          <img src={authUser?.profile_image} alt="User" className="h-12 w-12 rounded-full" />
         </span>
 
         <svg

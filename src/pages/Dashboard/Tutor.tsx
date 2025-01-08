@@ -35,7 +35,7 @@ const Tutor: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Tutor Dashboard" />
+      <Breadcrumb pageName="Lecturer Dashboard" />
       <h2 className="text-title-md2 font-semibold text-black dark:text-white mb-3">
         Course : {authUser?.courses ? (`${authUser?.courses[0]?.title} (${authUser?.courses[0]?.code})`): ('No Course')}
       </h2>
