@@ -56,7 +56,7 @@ const Student: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Dashboard" />
+      <Breadcrumb pageName="Student Dashboard" />
       <h2 className="text-title-md2 font-semibold text-black dark:text-white py-4">
           Projected CGPA : {projectCGPA?.prediction || 'None'}
       </h2>
