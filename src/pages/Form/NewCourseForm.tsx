@@ -51,10 +51,10 @@ const NewCourseForm = () => {
       displayNotification('error','Units are required')
       return
     }
-    if (!formData.instructor) {
-      displayNotification('error','Instructor is required')
-      return
-    }
+    // if (!formData.instructor) {
+    //   displayNotification('error','Instructor is required')
+    //   return
+    // }
 
     // Proceed with form submission if all fields are valid
     setIsLoading(true);
