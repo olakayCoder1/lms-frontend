@@ -4,6 +4,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StudentCartOne from '../../components/Charts/StudentChartOne';
 import StudentMaterialTable from '../../components/Tables/StudentMaterialTable';
 import { AuthContext } from '../../contexts/ContextProvider';
+import CGPACard from '../../components/CGPACard';
 
 const Student: React.FC = () => {
 
@@ -57,13 +58,11 @@ const Student: React.FC = () => {
   return (
     <>
       <Breadcrumb pageName="Student Dashboard" />
-      <h2 className="text-title-md2 font-semibold text-black dark:text-white py-4">
-          Projected CGPA : {projectCGPA?.prediction || 'None'}
-      </h2>
-      <h1>
-        
-      </h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+        <CGPACard
+            projectedCGPA={projectCGPA?.prediction || ''}
+            previousCGPA={authUser?.previous_cgpa || ''}
+          />
 
         <CardDataStats title="Registered Courses" total={overviewData?.registered_courses_count} isLoading={isLoading}>
           <svg

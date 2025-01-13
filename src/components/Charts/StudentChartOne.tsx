@@ -129,7 +129,7 @@ const StudentCartOne: React.FC = ({user_id}) => {
   const [state, setState] = useState<ChartOneState>({
     series: [
       {
-        name: 'Course Videos',
+        name: 'Contents',
         data: [0,0,0,0,0,0,0,0,0,0,0,0],
       },
 
@@ -148,7 +148,6 @@ const StudentCartOne: React.FC = ({user_id}) => {
           method: 'GET',
           path: `/students/${user_id}/materials/progress/analytics`,
         });
-        console.log(data?.data);  // Log the response to check the structure
 
         // Assuming data?.data contains the structure as described:
         const { monthly_material_summary, monthly_download_summary } = data?.data;
@@ -158,7 +157,7 @@ const StudentCartOne: React.FC = ({user_id}) => {
           ...prevState,
           series: [
             {
-              name: 'Course Videos',
+              name: 'Contents',
               data: monthly_download_summary,  // Set the 'Courses' data to weekly_video_count
             },
             {
