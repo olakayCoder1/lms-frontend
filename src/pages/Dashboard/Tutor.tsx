@@ -1,143 +1,210 @@
 import React, { useContext, useEffect, useState } from 'react';
-import CardDataStats from '../../components/CardDataStats';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import StudentCartOne from '../../components/Charts/StudentChartOne';
-import StudentMaterialsTable from '../../components/Tables/StudentMaterialsTable';
+import { 
+  BookOpen, 
+  Users, 
+  CheckCircle, 
+  Clock, 
+  BarChart2, 
+  FileText 
+} from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart, 
+  Pie, 
+  Cell 
+} from 'recharts';
 import { AuthContext } from '../../contexts/ContextProvider';
+import StudentsListTable from '../../components/Tables/StudentsListTable';
 
 const Tutor: React.FC = () => {
+  const { fetchWithAuth , authUser} = useContext(AuthContext);
+  // const [selectedCourse, setSelectedCourse] = useState(null);
+  const [attendanceTracking, setAttendanceTracking] = useState([]);
+  const [gradeDistribution, setGradeDistribution] = useState([]);
+  const [myCourses, setMyCourses] = useState([]);
 
 
-  const [isLoading, setIsLoading] = useState(false)
-  const {fetchWithAuth,formatDate,authUser} = useContext(AuthContext)
-  const [overviewData, setOverviewData] = useState({})
+  async function fetchMyCourses() {
+    try {
+        const data = await fetchWithAuth({
+        method: 'GET',
+        path: `/tutor/get-courses`,
+        });
+        console.log(data?.data)
+        setMyCourses(data?.data);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+    }
 
+  }
+  async function fetchGradesDesctribution() {
+    try {
+        const data = await fetchWithAuth({
+        method: 'GET',
+        path: `/tutor/get-grades`,
+        });
+        console.log(data?.data)
+        setGradeDistribution(data?.data?.gradeDistribution || []);
+        setAttendanceTracking(data?.data?.quizPerformance || [])
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+    }
+
+  }
 
   useEffect(() => {
-    async function fetchOverview() {
-        try {
-            setIsLoading(true)
-            const data = await fetchWithAuth({
-            method: 'GET',
-            path: `/tutor/dashboard/overview`,
-            });
-            console.log(data?.data)
-            setOverviewData(data?.data);
-            setIsLoading(false)
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-            setIsLoading(false)
-        }
+      fetchMyCourses();
+      fetchGradesDesctribution();
+    }, [])
+  
 
-    }
-    fetchOverview();
-  }, [])
+
+  const CourseCard = ({ course, isSelected, onClick }) => (
+    <div 
+      className={`
+        p-4 rounded-lg cursor-pointer transition-all 
+        ${isSelected 
+          ? 'bg-blue-100 dark:bg-blue-900 border-blue-500' 
+          : 'bg-white dark:bg-gray-800 hover:bg-gray-50'}
+        border shadow-sm
+      `}
+      onClick={onClick}
+    >
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="font-semibold text-gray-800 dark:text-white">{course.title}</h3>
+          <p className="text-sm text-gray-500">{course.code}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-gray-600">Students: {course.student_count}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ActivityCard = ({ activity }) => {
+    const iconMap = {
+      quiz: <CheckCircle className="text-blue-500" />,
+      assignment: <FileText className="text-green-500" />,
+      lecture: <BookOpen className="text-purple-500" />
+    };
+
+    return (
+      <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-2">
+        <div className="mr-4">
+          {iconMap[activity.type]}
+        </div>
+        <div>
+          <p className="font-medium text-gray-800 dark:text-white">
+            {activity.courseName}
+          </p>
+          <p className="text-sm text-gray-600">{activity.description}</p>
+          <p className="text-xs text-gray-500">{activity.date}</p>
+        </div>
+      </div>
+    );
+  };
+
+
 
   return (
-    <>
-      <Breadcrumb pageName="Lecturer Dashboard" />
-      <h2 className="text-title-md2 font-semibold text-black dark:text-white mb-3">
-        Course : {authUser?.courses ? (`${authUser?.courses[0]?.title} (${authUser?.courses[0]?.code})`): ('No Course')}
-      </h2>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:gap-7.5">
-
-
-        <CardDataStats title="Registered Student" total={overviewData?.registered_student_count}  isLoading={isLoading}>
-          <svg
-            className="fill-primary dark:fill-white"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.1063 18.0469L19.3875 3.23126C19.2157 1.71876 17.9438 0.584381 16.3969 0.584381H5.56878C4.05628 0.584381 2.78441 1.71876 2.57816 3.23126L0.859406 18.0469C0.756281 18.9063 1.03128 19.7313 1.61566 20.3844C2.20003 21.0375 2.99066 21.3813 3.85003 21.3813H18.1157C18.975 21.3813 19.8 21.0031 20.35 20.3844C20.9 19.7656 21.2094 18.9063 21.1063 18.0469ZM19.2157 19.3531C18.9407 19.6625 18.5625 19.8344 18.15 19.8344H3.85003C3.43753 19.8344 3.05941 19.6625 2.78441 19.3531C2.50941 19.0438 2.37191 18.6313 2.44066 18.2188L4.12503 3.43751C4.19378 2.71563 4.81253 2.16563 5.56878 2.16563H16.4313C17.1532 2.16563 17.7719 2.71563 17.875 3.43751L19.5938 18.2531C19.6282 18.6656 19.4907 19.0438 19.2157 19.3531Z"
-              fill=""
-            />
-            <path
-              d="M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z"
-              fill=""
-            />
-          </svg>
-        </CardDataStats>
-
-
-        <CardDataStats title="Active Student" total={overviewData?.active_student_count}  isLoading={isLoading}>
-          <svg
-            className="fill-primary dark:fill-white"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.1063 18.0469L19.3875 3.23126C19.2157 1.71876 17.9438 0.584381 16.3969 0.584381H5.56878C4.05628 0.584381 2.78441 1.71876 2.57816 3.23126L0.859406 18.0469C0.756281 18.9063 1.03128 19.7313 1.61566 20.3844C2.20003 21.0375 2.99066 21.3813 3.85003 21.3813H18.1157C18.975 21.3813 19.8 21.0031 20.35 20.3844C20.9 19.7656 21.2094 18.9063 21.1063 18.0469ZM19.2157 19.3531C18.9407 19.6625 18.5625 19.8344 18.15 19.8344H3.85003C3.43753 19.8344 3.05941 19.6625 2.78441 19.3531C2.50941 19.0438 2.37191 18.6313 2.44066 18.2188L4.12503 3.43751C4.19378 2.71563 4.81253 2.16563 5.56878 2.16563H16.4313C17.1532 2.16563 17.7719 2.71563 17.875 3.43751L19.5938 18.2531C19.6282 18.6656 19.4907 19.0438 19.2157 19.3531Z"
-              fill=""
-            />
-            <path
-              d="M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z"
-              fill=""
-            />
-          </svg>
-        </CardDataStats>
-
-
-        <CardDataStats title="Total Content" total={overviewData?.total_content_uploaded}  isLoading={isLoading}>
-          <svg
-            className="fill-primary dark:fill-white"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.1063 18.0469L19.3875 3.23126C19.2157 1.71876 17.9438 0.584381 16.3969 0.584381H5.56878C4.05628 0.584381 2.78441 1.71876 2.57816 3.23126L0.859406 18.0469C0.756281 18.9063 1.03128 19.7313 1.61566 20.3844C2.20003 21.0375 2.99066 21.3813 3.85003 21.3813H18.1157C18.975 21.3813 19.8 21.0031 20.35 20.3844C20.9 19.7656 21.2094 18.9063 21.1063 18.0469ZM19.2157 19.3531C18.9407 19.6625 18.5625 19.8344 18.15 19.8344H3.85003C3.43753 19.8344 3.05941 19.6625 2.78441 19.3531C2.50941 19.0438 2.37191 18.6313 2.44066 18.2188L4.12503 3.43751C4.19378 2.71563 4.81253 2.16563 5.56878 2.16563H16.4313C17.1532 2.16563 17.7719 2.71563 17.875 3.43751L19.5938 18.2531C19.6282 18.6656 19.4907 19.0438 19.2157 19.3531Z"
-              fill=""
-            />
-            <path
-              d="M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z"
-              fill=""
-            />
-          </svg>
-        </CardDataStats>
-
-
-        <CardDataStats title="Total Materials" total={overviewData?.total_materials_uploaded}  isLoading={isLoading}>
-          <svg
-            className="fill-primary dark:fill-white"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.1063 18.0469L19.3875 3.23126C19.2157 1.71876 17.9438 0.584381 16.3969 0.584381H5.56878C4.05628 0.584381 2.78441 1.71876 2.57816 3.23126L0.859406 18.0469C0.756281 18.9063 1.03128 19.7313 1.61566 20.3844C2.20003 21.0375 2.99066 21.3813 3.85003 21.3813H18.1157C18.975 21.3813 19.8 21.0031 20.35 20.3844C20.9 19.7656 21.2094 18.9063 21.1063 18.0469ZM19.2157 19.3531C18.9407 19.6625 18.5625 19.8344 18.15 19.8344H3.85003C3.43753 19.8344 3.05941 19.6625 2.78441 19.3531C2.50941 19.0438 2.37191 18.6313 2.44066 18.2188L4.12503 3.43751C4.19378 2.71563 4.81253 2.16563 5.56878 2.16563H16.4313C17.1532 2.16563 17.7719 2.71563 17.875 3.43751L19.5938 18.2531C19.6282 18.6656 19.4907 19.0438 19.2157 19.3531Z"
-              fill=""
-            />
-            <path
-              d="M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z"
-              fill=""
-            />
-          </svg>
-        </CardDataStats>
-        
-      </div>
-
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        {/* <StudentCartOne /> */}
-        {/* <ChartTwo /> */}
-        {/* <ChartThree /> */}
-        {/* <MapOne /> */}
-        <div className="col-span-12">
-          {/* <StudentMaterialsTable /> */}
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+      <div className="container mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+              Lecturer Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300">
+              Welcome, {authUser?.first_name}
+            </p>
+          </div>
         </div>
-        {/* <ChatCard /> */}
+
+        {/* Main Dashboard Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Courses List */}
+          <div className="space-y-4 lg:col-span-1">
+            <h2 className="text-xl font-semibold flex items-center">
+              <BookOpen className="mr-2 text-blue-500" /> My Courses
+            </h2>
+            {myCourses.map(course => (
+              <CourseCard 
+                key={course.id}
+                course={course}
+                isSelected={false}
+                onClick={() => false}
+              />
+            ))}
+          </div>
+
+          {/* Performance and Attendance */}
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Grade Distribution */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5">
+              <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <BarChart2 className="mr-2 text-green-500" /> Grade Distribution
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={gradeDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="count"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {gradeDistribution?.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Attendance Tracking */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5">
+              <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <Users className="mr-2 text-blue-500" /> Quiz Overview
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart 
+                  data={attendanceTracking}
+                  layout="vertical"
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal />
+                  <XAxis type="number" />
+                  <YAxis dataKey="course" type="category" />
+                  <Tooltip />
+                  <Bar dataKey="good" stackId="a" fill="#10B981" />
+                  <Bar dataKey="bad" stackId="a" fill="#EF4444" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activities */}
+        <div className=' my-4'>
+          <h2 className="text-xl font-semibold flex items-center mb-4">
+            My Students
+          </h2>
+          <StudentsListTable />
+        </div>
+       
       </div>
-    </>
+    </div>
   );
 };
 

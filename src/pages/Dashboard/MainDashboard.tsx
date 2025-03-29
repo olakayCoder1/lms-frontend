@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { AuthContext } from '../../contexts/ContextProvider'
 import Student from './Student'
 import Tutor from './Tutor'
@@ -8,7 +8,7 @@ import Admin from './Admin'
 export default function MainDashboard() {
 
 
-    const { authUser } = useContext(AuthContext)
+    const { authUser } = useContext<any>(AuthContext)
     
 
     return (

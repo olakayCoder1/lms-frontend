@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/ContextProvider';
 import InAppLoader from '../InAppLoader';
-
+import { User, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const StudentsListTable = () => {
 
@@ -88,44 +88,7 @@ const StudentsListTable = () => {
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
 
-      <div className="hidden sm:block pb-8">
-          <form onSubmit={handleSearch}>
-              <div className="relative">
-              <button className="absolute left-0 top-1/2 -translate-y-1/2">
-                  <svg
-                  className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  >
-                  <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                      fill=""
-                  />
-                  <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                      fill=""
-                  />
-                  </svg>
-              </button>
-
-              <input
-                  type="text"
-                  name="search"
-                  value={searchQuery}
-                  onChange={handleSearchParamChange}
-                  placeholder="Type to search..."
-                  className="w-full bg-transparent pl-9 pr-4 text-black focus:outline-none dark:text-white xl:w-125"
-              />
-              </div>
-          </form>
-      </div>
+      
 
 
       <div className="">
@@ -138,6 +101,9 @@ const StudentsListTable = () => {
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Name
+              </th>
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                Performance
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Joined date
@@ -165,6 +131,40 @@ const StudentsListTable = () => {
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
                         {student?.first_name} {student?.last_name}
+                      </h5>
+                      {/* <p className="text-sm">${packageItem.price}</p> */}
+                    </td>
+                    <td className="border-b  border-[#eee] py-5 px-4 dark:border-strokedark ">
+                      <h5 className="  text-black dark:text-white">
+                        <div>
+                          <span className="bg-gray-1 text-black rounded-full px-2 py-1">
+                          {student?.previous_cgpa} :: {student?.prediction?.prediction}
+                          </span>
+                          <div>
+                          {student?.prediction?.group == 'improving' ? (
+                          <>
+                          <div className={`flex items-center text-green-600`}>
+                            <TrendingUp className={`mr-2 text-green-600`} size={20} />
+                            <span className="text-sm font-medium">{student?.prediction?.group }</span>
+                          </div>
+                          </>
+                        ): (
+                          student?.prediction?.group == 'declining' ? (
+                            <div className={`flex items-center text-yellow-600`}>
+                              <TrendingDown className={`mr-2 text-yellow-600`} size={20} />
+                            <span className="text-sm font-medium">{student?.prediction?.group}</span>
+                            </div>
+                          ): (
+                            <div className={`flex items-center text-blue-600`}>
+                                <Minus className={`mr-2 text-blue-600`} size={20} />
+                              <span className="text-sm font-medium">{student?.prediction?.group || 'N/A'}</span>
+                            </div>
+                          )
+                        )}
+                          </div>
+                        </div>
+                        
+                        
                       </h5>
                       {/* <p className="text-sm">${packageItem.price}</p> */}
                     </td>
