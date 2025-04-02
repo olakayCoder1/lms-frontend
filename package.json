@@ -19,6 +19,7 @@
     "@stream-io/video-react-sdk": "^1.7.19",
     "@zegocloud/zego-uikit-prebuilt": "^2.13.1",
     "apexcharts": "^3.41.0",
+    "dotenv": "^16.4.7",
     "flatpickr": "^4.6.13",
     "global": "^4.4.0",
     "headlessui": "^0.0.0",

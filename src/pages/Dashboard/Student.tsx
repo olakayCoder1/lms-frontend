@@ -98,8 +98,8 @@ const Student: React.FC = () => {
       <Breadcrumb pageName="Student Dashboard" />
       <CGPACard
           projectedCGPA={projectCGPA?.prediction || ''}
-          previousCGPA={'3.7' || ''}
-          user={{ name: 'Olanrewaju' }}
+          previousCGPA={authUser?.previous_cgpa || ''}
+          user={{ name: authUser?.first_name }}
         
         />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -146,10 +146,10 @@ const Student: React.FC = () => {
             /> */}
           </div>
         </div>
-        <div className=' md:col-span-6'>
+        <div className='col-span-12 md:col-span-12 xl:col-span-6'>
         <QuizGradeDistribution gradeData={gradeDistributionOverview} /> 
         </div>
-        <div className=' md:col-span-6'>
+        <div className='col-span-12 md:col-span-12 xl:col-span-6'>
           <StudentCartOne user_id={authUser?.id}/>
         </div>
         

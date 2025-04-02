@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
-import { toast } from 'react-toastify';
-
+import { toast } from 'react-toastify'
 
 export const AuthContext = createContext()
 
@@ -10,8 +9,10 @@ export const AuthContext = createContext()
 
 export default function AuthContextProvider({children}){
     
+    // get the backend url from the environment variable
     const BACKEND_URL = 'https://lms-backend-ydwv.onrender.com/api/v1'
     // const BACKEND_URL = 'http://127.0.0.1:8000/api/v1'
+    console.log(BACKEND_URL);
 
 
     const [ authUser , setAuthUser ] = React.useState(()=> JSON.parse(localStorage.getItem('user'))|| null);
