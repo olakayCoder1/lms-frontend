@@ -187,7 +187,7 @@ const StudentsListTable = () => {
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
-                          onClick={()=> navigate(`/students/${student.id}`)} className="hover:text-primary">
+                          onClick={()=> navigate(`/user/${student.id}`)} className="hover:text-primary">
                           <svg
                             className="fill-current"
                             width="18"

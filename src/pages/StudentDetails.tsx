@@ -17,7 +17,7 @@ export default function StudentDetails() {
             try {
                 const data = await fetchWithAuth({
                 method: 'GET',
-                path: `/students/${id}`,
+                path: `/user/${id}`,
                 });
                 console.log(data)
                 setStudent(data?.data);
@@ -36,7 +36,8 @@ export default function StudentDetails() {
             <Breadcrumb pageName={`${student?.first_name} ${student?.last_name}`} />
             <div className="flex flex-col gap-10">
                 <StudentDetailsTop student={student} user_id={id}/>
-                <StudentDetailsAnalysis user_id={id}/>
+                {student?.role !== 'tutor' && (<StudentDetailsAnalysis user_id={id}/>)}
+                
             </div>
         </>
     )

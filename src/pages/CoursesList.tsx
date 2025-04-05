@@ -15,21 +15,22 @@ export default function CoursesList() {
     inactive_courses: ''
   });
 
-  useEffect(() => {
-    async function fetchCoursesOverview() {
-      try {
-        setIsLoading(true);
-        const data = await fetchWithAuth({
-          method: 'GET',
-          path: '/management/courses/overview',
-        });
-        setMaterialsOverview(data?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching courses overview:', error);
-        setIsLoading(false);
-      }
+  async function fetchCoursesOverview() {
+    try {
+      setIsLoading(true);
+      const data = await fetchWithAuth({
+        method: 'GET',
+        path: '/management/courses/overview',
+      });
+      setMaterialsOverview(data?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching courses overview:', error);
+      setIsLoading(false);
     }
+  }
+  useEffect(() => {
+    
     fetchCoursesOverview();
   }, []);
 
@@ -66,7 +67,7 @@ export default function CoursesList() {
 
         {/* Courses List */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-          <CoursesTable />
+          <CoursesTable fetchCoursesOverview={fetchCoursesOverview}/>
         </div>
       </div>
     </div>

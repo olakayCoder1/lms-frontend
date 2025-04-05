@@ -162,7 +162,7 @@ function App() {
           }
         />
         <Route
-          path="/students/:id"
+          path="/user/:id"
           element={
             <>
               <PageTitle title="Student Details" />

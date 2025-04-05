@@ -1,26 +1,21 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { Package } from '../../types/package';
 import { AuthContext } from '../../contexts/ContextProvider';
 import InAppLoader from '../InAppLoader';
 import { useNavigate } from 'react-router-dom';
 
-const CoursesTable = () => {
+const CoursesTable = ({fetchCoursesOverview}) => {
 
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const {fetchWithAuth,formatDate} = useContext(AuthContext);
+  const {fetchWithAuth,formatDate,displayNotification} = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showModal, setShowModal] = useState(false); 
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
   const [materials, setMaterials] = useState([])
 
-  const docs = [
-    { uri: 'https://pdfobject.com/pdf/sample.pdf' }, // Remote file
-    // Add other document URLs here as needed
-  ];
 
 
   const closeModal = () => setIsModalOpen(false);
@@ -96,6 +91,29 @@ const CoursesTable = () => {
     fetchMaterials();
     navigate(`?search=${searchQuery}`, { replace: true });
   }
+
+  // Function to handle the delete action
+  const handleDelete = async () => {
+    if (!courseToDelete) return;
+
+    try {
+      await fetchWithAuth({
+        method: 'DELETE',
+        path: `/management/courses/${courseToDelete}`,
+      });
+      // Filter out the deleted quiz from the state
+      setMaterials((prevQuizzes) => prevQuizzes.filter((material) => material.id !== courseToDelete));
+      displayNotification('success', 'Course deleted successfully!');
+      setShowModal(false);
+      fetchCoursesOverview(); // Call the function to refresh the courses overview
+      // fetchMaterials() 
+      
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      displayNotification('error', 'Failed to delete quiz');
+    }
+  };
+
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -201,7 +219,12 @@ const CoursesTable = () => {
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
 
-                          <button className="hover:text-primary">
+                          <button
+                            onClick={() => {
+                              setCourseToDelete(packageItem.id); 
+                              setShowModal(true); 
+                            }}
+                            className="hover:text-primary">
                             <svg
                               className="fill-current"
                               width="18"
@@ -240,6 +263,29 @@ const CoursesTable = () => {
             </table>
           )
         }
+
+        {/* Confirmation Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+              <h3 className="text-lg font-medium text-black">Are you sure you want to delete this material?</h3>
+              <div className="mt-4 flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="py-2 px-4 bg-gray-300 text-black rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="py-2 px-4 bg-red-500 text-white rounded-lg"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
       </div>
     </div>
