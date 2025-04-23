@@ -146,10 +146,12 @@ import { AuthContext } from "../contexts/ContextProvider";
 // };
 
 
+// https://getstream.io/video/docs/react/basics/quickstart/
+// https://getstream.io/video/docs/react/guides/client-auth/
 const apiKey = "mmhfdzb5evj2";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL1NlbmF0b3JfQmFpbF9PcmdhbmEiLCJ1c2VyX2lkIjoiU2VuYXRvcl9CYWlsX09yZ2FuYSIsInZhbGlkaXR5X2luX3NlY29uZHMiOjYwNDgwMCwiaWF0IjoxNzMyNjQwMTc0LCJleHAiOjE3MzMyNDQ5NzR9.0S0Iz2Raje_KnOa24TTaC89wGUcYp58LVOiewiBoHJA";
-const userId = "Senator_Bail_Organa";
-const callId = "LQgpKRucLObN";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTM0OTQ0OCJ9.kcIo6caulWnsblvkTbgKDzBTofnTz5icj2nypIIl3Po";
+const userId = "1349448";
+const callId = "LStZ0S8iyxr3";
 
 const user: User = { id: userId, name: "Tutorial" };
 const client = new StreamVideoClient({ apiKey, user, token });

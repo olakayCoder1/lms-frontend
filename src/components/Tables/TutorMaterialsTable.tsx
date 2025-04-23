@@ -1,3 +1,5 @@
+// disable typing
+// @ts-nocheck
 import { useContext, useEffect, useRef, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Package } from '../../types/package';
