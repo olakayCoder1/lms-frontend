@@ -86,7 +86,7 @@ const CourseScheduleAnalytics = () => {
         />
         <StatCard 
           icon={Users}
-          title="Instructors"
+          title="Lecturers"
           value={analytics.instructor_count}
           subtext={`${analytics.assigned_courses} assigned courses`}
           color="text-purple-500"

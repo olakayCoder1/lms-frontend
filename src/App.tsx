@@ -39,6 +39,7 @@ import AddQuizQuestionForm from './pages/Form/AddQuizQuestionForm';
 import QuizListTable from './components/Tables/QuizListTable';
 import QuizViewEditPage from './pages/QuizViewEditPage';
 import QuizTakingComponent from './components/QuizTakingComponent';
+import StudentQuizzesTable from './components/Tables/StudentQuizzesTable';
 
 
 function App() {
@@ -93,6 +94,15 @@ function App() {
             <>
               <PageTitle title="Courses " />
               <StudentCoureses />
+            </>
+          }
+        />
+        <Route
+          path="/quizzes"
+          element={
+            <>
+              <PageTitle title="Quizzes " />
+              <StudentQuizzesTable />
             </>
           }
         />
